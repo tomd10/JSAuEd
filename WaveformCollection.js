@@ -8,6 +8,15 @@ class WaveformCollection
 
     }
 
+    static getWaveform(id)
+    {
+        for (const wf of this.waveforms)
+        {
+            if (wf.id == id) return wf;
+        }
+        return null;
+    }
+
     static addWaveform()
     {
 
@@ -15,11 +24,11 @@ class WaveformCollection
 
     static init()
     {
-        let wf1 = new Waveform();
-        let wf2 = new Waveform();
+        let wf1 = new Waveform("0");
+        let wf2 = new Waveform("1");
 
-        let wv1 = new WaveformViewer("0", wf1);
-        let wv2 = new WaveformViewer("1", wf2);
+        let wv1 = new WaveformViewer(wf1);
+        let wv2 = new WaveformViewer(wf2);
 
         this.waveforms.push(wf1);
         this.viewers.push(wv1);
@@ -28,6 +37,23 @@ class WaveformCollection
         this.viewers.push(wv2);
 
         this.redraw();
+    }
+
+    static setWaveformSelect(select)
+    {
+        select.innerHTML = "";
+        this.waveforms.forEach((wfv) => {
+            console.log(wfv.id);
+            let opt = document.createElement("option");
+            opt.innerHTML = wfv.id;
+            opt.value = wfv.id;
+            select.appendChild(opt);
+        });
+    }
+
+    static setAllWaveformSelects()
+    {
+
     }
 
     static redraw()

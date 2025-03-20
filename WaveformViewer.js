@@ -1,15 +1,13 @@
 class WaveformViewer {
     #waveform;
     #scale = 2000;
-    #id;
     #canvas;
     #position = 0;
     #milis = 0;
 
-    #visible = 1;
+    //#visible = 1;
     #audio;
-    constructor(_id, _waveform) {
-        this.#id = _id;
+    constructor(_waveform) {
         this.#waveform = _waveform;
         
         const mainWrapper = document.createElement("div");
@@ -17,25 +15,20 @@ class WaveformViewer {
 
         const header = document.createElement("div");
         header.classList.add("waveformHeaderDiv");
-        header.innerHTML = "Waveform " + this.#id;
+        header.classList.add("header");
+        header.innerHTML = "Waveform " + this.#waveform.id;
 
         mainWrapper.appendChild(header);
 
         const wrapper = document.createElement("div");
-        wrapper.id = _id;
+        wrapper.id = this.#waveform.id;
         wrapper.classList.add("waveformDiv");
         header.addEventListener("click", () => {
-            if (this.#visible == 1)
+            if (wrapper.classList.contains("invisible"))
             {
-                this.#visible = 0;
-                wrapper.style.display = "none";
-                
+                wrapper.classList.remove("invisible");
             }
-            else
-            {
-                this.#visible = 1;
-                wrapper.style.display = "block";
-            }
+            else wrapper.classList.add("invisible");
         });
 
         mainWrapper.appendChild(wrapper);
@@ -82,35 +75,33 @@ class WaveformViewer {
 
         const divScale = document.createElement("div");
         divScale.classList.add("scaleDiv");
-        divScale.id = this.#id + "scale";
+        divScale.id = this.#waveform.id + "scale";
         wrapper.appendChild(divScale);
 
         const divTimestamp0 = document.createElement("div");
         divTimestamp0.classList.add("timestamp0Div");
-        divTimestamp0.id = this.#id + "timestamp0";
+        divTimestamp0.id = this.#waveform.id + "timestamp0";
         wrapper.appendChild(divTimestamp0);
 
         const divTimestamp1 = document.createElement("div");
         divTimestamp1.classList.add("timestamp1Div");
-        divTimestamp1.id = this.#id + "timestamp1";
+        divTimestamp1.id = this.#waveform.id + "timestamp1";
         wrapper.appendChild(divTimestamp1);
 
         const divTimestamp2 = document.createElement("div");
         divTimestamp2.classList.add("timestamp2Div");
-        divTimestamp2.id = this.#id + "timestamp2";
+        divTimestamp2.id = this.#waveform.id + "timestamp2";
         wrapper.appendChild(divTimestamp2);
 
         const divTimestamp3 = document.createElement("div");
         divTimestamp3.classList.add("timestamp3Div");
-        divTimestamp3.id = this.#id + "timestamp3";
+        divTimestamp3.id = this.#waveform.id + "timestamp3";
         wrapper.appendChild(divTimestamp3);
 
         const divTimestamp4 = document.createElement("div");
         divTimestamp4.classList.add("timestamp4Div");
-        divTimestamp4.id = this.#id + "timestamp4";
+        divTimestamp4.id = this.#waveform.id + "timestamp4";
         wrapper.appendChild(divTimestamp4);
-
-
 
         document.getElementById("waves").appendChild(mainWrapper);
         /*
@@ -279,12 +270,12 @@ class WaveformViewer {
         ctx.stroke();
 
         //Scale and timestamp labels
-        document.getElementById(this.#id + "scale").innerHTML = this.getScale();
-        document.getElementById(this.#id + "timestamp0").innerHTML = this.getTimestamps()[0];
-        document.getElementById(this.#id + "timestamp1").innerHTML = this.getTimestamps()[1];
-        document.getElementById(this.#id + "timestamp2").innerHTML = this.getTimestamps()[2];
-        document.getElementById(this.#id + "timestamp3").innerHTML = this.getTimestamps()[3];
-        document.getElementById(this.#id + "timestamp4").innerHTML = this.getTimestamps()[4];
+        document.getElementById(this.#waveform.id + "scale").innerHTML = this.getScale();
+        document.getElementById(this.#waveform.id + "timestamp0").innerHTML = this.getTimestamps()[0];
+        document.getElementById(this.#waveform.id + "timestamp1").innerHTML = this.getTimestamps()[1];
+        document.getElementById(this.#waveform.id + "timestamp2").innerHTML = this.getTimestamps()[2];
+        document.getElementById(this.#waveform.id + "timestamp3").innerHTML = this.getTimestamps()[3];
+        document.getElementById(this.#waveform.id + "timestamp4").innerHTML = this.getTimestamps()[4];
     }
 
     getScale() {

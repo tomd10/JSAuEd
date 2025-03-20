@@ -17,3 +17,14 @@
             border: 3px solid red;
             margin: 5px;
         }
+
+        .operationWrapperDiv
+        {
+            border: 3px solid blue;
+            margin: 5px;
+        }
+
+        .invisible
+        {
+            display: none;
+        }

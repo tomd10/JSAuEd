@@ -3,15 +3,22 @@ class Waveform
     #waveform;
     #samplerate;
     #length;
+    #id;
 
-    constructor()
+    constructor(id)
     {
+        this.#id = id;
         this.setWaveform(440, 10, 44100, "sine", 1);
     }
 
     get samplerate()
     {
         return this.#samplerate;
+    }
+
+    get id()
+    {
+        return this.#id;
     }
 
     get length()
@@ -54,7 +61,8 @@ class Waveform
     */
     getWAVBlob()
     {
-        const buffer = new ArrayBuffer(44 + this.#length*2); // Ensure size includes PCM data
+        const buffer = new ArrayBuffer(44 + this.length*2); // Ensure size includes PCM data
+        console.log(44 + this.length*2);
         const view = new DataView(buffer);
         let offset = 0;
     
@@ -65,7 +73,7 @@ class Waveform
         }
     
         writeString(view, offset, "RIFF"); offset += 4;
-        view.setUint32(offset, this.chunkSize, true); offset += 4;
+        view.setUint32(offset, 36+this.length*2, true); offset += 4;
         writeString(view, offset, "WAVE"); offset += 4;
     
         writeString(view, offset, "fmt "); offset += 4;
@@ -78,10 +86,10 @@ class Waveform
         view.setUint16(offset, 16, true); offset += 2;
     
         writeString(view, offset, "data"); offset += 4;
-        view.setUint32(offset, this.#length*2, true); offset += 4;
+        view.setUint32(offset, this.length*2, true); offset += 4;
     
         // Write PCM data properly
-        const dataView = new Int16Array(buffer, offset, this.#waveform.length);
+        const dataView = new Int16Array(buffer, offset, this.length);
         dataView.set(this.#waveform);
     
         const buf = buffer;

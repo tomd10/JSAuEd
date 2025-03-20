@@ -1,3 +1,12 @@
+class Init
+{
+    static init()
+    {
+
+
+    }
+}
+
 const sample = new Array();
 for (let j = 0; j < 2; j++) {
     for (let i = 0; i < 50000; i++) {
@@ -19,7 +28,7 @@ const sample2 = new Array()
 
 AudioWrapper.Init();
 WaveformCollection.init();
-
+ModuleCollection.init();
 
 
 /*
