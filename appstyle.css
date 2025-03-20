@@ -12,3 +12,8 @@
             background-color: #fff;
             
         }
+        .waverformWrapperDiv
+        {
+            border: 3px solid red;
+            margin: 5px;
+        }

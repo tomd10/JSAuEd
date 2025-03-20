@@ -6,14 +6,40 @@ class WaveformViewer {
     #position = 0;
     #milis = 0;
 
+    #visible = 1;
     #audio;
     constructor(_id, _waveform) {
         this.#id = _id;
         this.#waveform = _waveform;
+        
+        const mainWrapper = document.createElement("div");
+        mainWrapper.classList.add("waverformWrapperDiv");
+
+        const header = document.createElement("div");
+        header.classList.add("waveformHeaderDiv");
+        header.innerHTML = "Waveform " + this.#id;
+
+        mainWrapper.appendChild(header);
 
         const wrapper = document.createElement("div");
         wrapper.id = _id;
         wrapper.classList.add("waveformDiv");
+        header.addEventListener("click", () => {
+            if (this.#visible == 1)
+            {
+                this.#visible = 0;
+                wrapper.style.display = "none";
+                
+            }
+            else
+            {
+                this.#visible = 1;
+                wrapper.style.display = "block";
+            }
+        });
+
+        mainWrapper.appendChild(wrapper);
+
         const canvas = document.createElement("canvas");
         canvas.width = 800;
         canvas.height = 300;
@@ -86,7 +112,7 @@ class WaveformViewer {
 
 
 
-        document.getElementById("waves").appendChild(wrapper);
+        document.getElementById("waves").appendChild(mainWrapper);
         /*
         document.getElementById(this.#id + "zoomIn").addEventListener("click", () => {
             this.zoomIn();
