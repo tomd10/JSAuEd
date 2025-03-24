@@ -54,19 +54,3 @@ a.click();
 document.body.removeChild(a);
 URL.revokeObjectURL(url);
 */
-
-document.getElementById("test").addEventListener("click", () => {
-    audio.Init();
-});
-
-document.getElementById("test2").addEventListener("click", () => {
-    audio.RecordAudio();
-});
-
-document.getElementById("test3").addEventListener("click", () => {
-    audio.StopRecord();
-});
-
-document.getElementById("test4").addEventListener("click", () => {
-    wave.setWaveform(audio.recordedWaveform, audio.samplerate);
-});

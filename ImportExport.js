@@ -1,5 +1,7 @@
 class ImportExport
 {
+    static samplerate = null;
+    static waveform = null;
     //MODULE 0
     constructor()
     {
@@ -39,6 +41,15 @@ class ImportExport
         wfSelect1.classList.add("waveformSelect");
         wfSelect1.id = "mod0_0WaveformSelect";
         WaveformCollection.setWaveformSelect(wfSelect1);
+        
+        const importDiv2 = document.createElement("div");
+        importDiv2.classList.add("helptextDiv");
+        importDiv2.innerHTML = " as ";
+
+        const inputFilename = document.createElement("input");
+        inputFilename.type = "text";
+        inputFilename.id = "fileDownloadInput";
+        inputFilename.value = "wave.wav";
 
         const exportButton = document.createElement("button");
         exportButton.classList.add("commandButton");
@@ -55,7 +66,8 @@ class ImportExport
         uploadDiv.id = "uploadWrapperDiv";
 
         const label = document.createElement("label");
-        label.for = "wavupload";
+        label.setAttribute("for", "fileUploadInput");
+        label.id = "fileUploadLabel";
         label.innerHTML = "Upload WAV file";
 
         const input = document.createElement("input");
@@ -63,6 +75,7 @@ class ImportExport
         input.id = "fileUploadInput";
         input.name = "wavupload";
         input.addEventListener("change", this.uploaded);
+        input.style.display = "none";
 
 
         uploadDiv.appendChild(label);
@@ -87,7 +100,7 @@ class ImportExport
 
         const storeButton = document.createElement("button");
         storeButton.classList.add("commandButton");
-        storeButton.innerHTML = "Export!";
+        storeButton.innerHTML = "Import!";
         storeButton.addEventListener("click", () => {this.importFile()});
 
         mainWrapper.appendChild(header);
@@ -95,6 +108,8 @@ class ImportExport
 
         lineDiv1.appendChild(importDiv);
         lineDiv1.appendChild(wfSelect1);
+        lineDiv1.appendChild(importDiv2);
+        lineDiv1.appendChild(inputFilename);
         lineDiv1.appendChild(exportButton);
 
         lineDiv2.appendChild(uploadDiv);
@@ -110,9 +125,42 @@ class ImportExport
         document.getElementById("modules").appendChild(mainWrapper);
     }
 
-    uploaded()
+    async uploaded()
     {
+        const fileInput = document.getElementById("fileUploadInput");
 
+        //Valid upload?
+        if(fileInput.files.length == 0) return;
+
+        let file = fileInput.files[0];
+        
+        //Header exists?
+        if (file.size <= 44) return;
+
+        const arrayBuffer = await file.arrayBuffer();
+        const dataView = new DataView(arrayBuffer);
+
+        //Header RIFF?
+        if (dataView.getUint32(0, false) !== 1380533830) return;
+
+        //File size OK?
+        if (file.size - 8 != dataView.getUint32(4, true)) return;
+
+        //Channel count 
+        if (dataView.getUint16(22, true) != 1) return;
+
+        //16 bit signed?
+        if (dataView.getUint16(34, true) != 16) return;
+
+
+        ImportExport.samplerate = dataView.getUint16(24, true);
+        ImportExport.waveform = new Int16Array(arrayBuffer, 44, (file.size - 44)/2);
+        
+        console.log(ImportExport.samplerate);
+        console.log(ImportExport.waveform);
+
+        console.log("SAVED WAVEFORMS!!!");
+        //console.log(this);
     }
 
     exportFile()
@@ -124,7 +172,16 @@ class ImportExport
         const url = URL.createObjectURL(blob);  
         const a = document.createElement("a");
         a.href = url;
-        a.download = "pokus.wav";
+
+        if (document.getElementById("fileDownloadInput").value != "")
+        {
+            a.download = document.getElementById("fileDownloadInput").value;
+        }
+        else
+        {
+            a.download = "waveform.wav";
+        }
+        
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -133,6 +190,19 @@ class ImportExport
 
     importFile()
     {
-        
+        console.log("storing");
+        const wf = WaveformCollection.getWaveform(document.getElementById("mod0_1WaveformSelect").value);
+        if (wf == null) return;
+
+        console.log("got wf");
+
+        console.log(this.samplerate);
+        console.log(this.waveform);
+        console.log(this);
+        if (ImportExport.samplerate == null || ImportExport.waveform == null) return;
+        wf.setSamples(ImportExport.waveform, ImportExport.samplerate);
+
+        WaveformCollection.redraw();
+
     }
 }

@@ -45,6 +45,7 @@ class Record
         lineDiv2.classList.add("operationLineDiv");
 
         const helpDiv1 = document.createElement("div");
+        helpDiv1.id = "recLengthDiv";
         helpDiv1.classList.add("helptextDiv");
         helpDiv1.innerHTML = "Store recording to waveform ";
         
@@ -77,16 +78,27 @@ class Record
 
     startRecord()
     {
-        console.log("start");
+        AudioWrapper.RecordAudio();
     }
 
     stopRecord()
     {
-        console.log("stop");
+        AudioWrapper.StopRecord();
+
+        if (AudioWrapper.recordedWaveform == null) return;
+
+        let time = Math.floor(AudioWrapper.recordedWaveform.length / AudioWrapper.samplerate);
+
+        document.getElementById("recLengthDiv").innerHTML = "Store " + time + " sec recording to waveform";
     }
 
     storeRecord()
     {
-        console.log("store");
+        const waveform = WaveformCollection.getWaveform(document.getElementById("mod1_0WaveformSelect").value);
+        if (waveform == null) return;
+
+        if (AudioWrapper.recordedWaveform == null) return;
+
+        waveform.setSamples(AudioWrapper.recordedWaveform, AudioWrapper.samplerate);
     }
 }

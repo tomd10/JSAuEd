@@ -103,6 +103,11 @@ class WaveformViewer {
         divTimestamp4.id = this.#waveform.id + "timestamp4";
         wrapper.appendChild(divTimestamp4);
 
+        const divSamplerate = document.createElement("div");
+        divSamplerate.classList.add("samplerateDiv");
+        divSamplerate.id = this.#waveform.id + "samplerate";
+        wrapper.appendChild(divSamplerate);
+
         document.getElementById("waves").appendChild(mainWrapper);
         /*
         document.getElementById(this.#id + "zoomIn").addEventListener("click", () => {
@@ -276,6 +281,7 @@ class WaveformViewer {
         document.getElementById(this.#waveform.id + "timestamp2").innerHTML = this.getTimestamps()[2];
         document.getElementById(this.#waveform.id + "timestamp3").innerHTML = this.getTimestamps()[3];
         document.getElementById(this.#waveform.id + "timestamp4").innerHTML = this.getTimestamps()[4];
+        document.getElementById(this.#waveform.id + "samplerate").innerHTML = this.#waveform.samplerate + " Hz";
     }
 
     getScale() {

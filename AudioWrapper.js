@@ -18,10 +18,17 @@ class AudioWrapper
     static samplerate = 44100;
     static recordingAvailable = true;
 
+    static #initialized = false;
+
     static async Init()
     {
-        await this.InitAudio();
-        await this.InitRecording();
+        if (!this.#initialized)
+        {
+            await this.InitAudio();
+            await this.InitRecording();
+            this.#initialized = true;
+        }
+
     }
 
     static async InitAudio()
