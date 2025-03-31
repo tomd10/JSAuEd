@@ -1,64 +1,31 @@
 class Record
 {
+    #wfs1;
     constructor()
     {
-        //operationWrapperDiv
-            //operationHeaderDiv
-            //operationDiv
-
-            //pomocny text helptextDiv
-            //select pro wf waveformSelect
-            //accept nebo doSomething buttons commandButton
-        const mainWrapper = document.createElement("div");
-        mainWrapper.classList.add("operationWrapperDiv");
-
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("operationDiv");
-        
-        const header = document.createElement("div");
-        header.innerHTML = "Record";
-        header.classList.add("operationHeaderDiv");
-        header.addEventListener("click", () => {
-            if (wrapper.classList.contains("invisible"))
-            {
-                wrapper.classList.remove("invisible");
-            }
-            else wrapper.classList.add("invisible");
-        });
+        const hdr = HTMLDrawer.getHeader("Record");
+        const mainWrapper = hdr[0];
+        const wrapper = hdr[1];    
+        const header = hdr[2];
     
         //Line 1
-        const lineDiv1 = document.createElement("div");
-        lineDiv1.classList.add("operationLineDiv");
+        const lineDiv1 = HTMLDrawer.getLineDiv();
 
-        const startRecButton = document.createElement("button");
-        startRecButton.classList.add("auxButton");
-        startRecButton.innerHTML = "Start recording";
-        startRecButton.addEventListener("click", () => {this.startRecord()}); 
-
-        const stopRecButton = document.createElement("button");
-        stopRecButton.classList.add("auxButton");
-        stopRecButton.innerHTML = "Stop recording";
-        stopRecButton.addEventListener("click", () => {this.stopRecord()});       
+        const startRecButton = HTMLDrawer.getAuxButton("Start recording", () => {this.startRecord()});
+        const stopRecButton = HTMLDrawer.getAuxButton("Stop recording", () => {this.stopRecord()});
+   
         
         //Line 2
-        const lineDiv2 = document.createElement("div");
-        lineDiv2.classList.add("operationLineDiv");
+        const lineDiv2 = HTMLDrawer.getLineDiv();
 
-        const helpDiv1 = document.createElement("div");
-        helpDiv1.id = "recLengthDiv";
-        helpDiv1.classList.add("helptextDiv");
-        helpDiv1.innerHTML = "Store recording to waveform ";
+        const helpDiv1 = HTMLDrawer.getHelpText("Store recording to waveform ");
+
         
 
-        const wfSelect1 = document.createElement("select");
-        wfSelect1.classList.add("waveformSelect");
-        wfSelect1.id = "mod1_0WaveformSelect";
-        WaveformCollection.setWaveformSelect(wfSelect1);
+        this.#wfs1 = HTMLDrawer.getWaveformSelect();
         
-        const storeButton = document.createElement("button");
-        storeButton.classList.add("commandButton");
-        storeButton.innerHTML = "Store!";
-        storeButton.addEventListener("click", () => {this.storeRecord()});
+        const storeButton = HTMLDrawer.getCommandButton("Store", () => {this.storeRecord()});
+
         
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
@@ -67,7 +34,7 @@ class Record
         lineDiv1.appendChild(stopRecButton);
 
         lineDiv2.appendChild(helpDiv1);
-        lineDiv2.appendChild(wfSelect1);
+        lineDiv2.appendChild(this.#wfs1);
         lineDiv2.appendChild(storeButton);
 
         wrapper.appendChild(lineDiv1);
@@ -81,24 +48,27 @@ class Record
         AudioWrapper.RecordAudio();
     }
 
-    stopRecord()
+    async stopRecord()
     {
-        AudioWrapper.StopRecord();
+        await AudioWrapper.StopRecord();
 
         if (AudioWrapper.recordedWaveform == null) return;
 
         let time = Math.floor(AudioWrapper.recordedWaveform.length / AudioWrapper.samplerate);
 
         document.getElementById("recLengthDiv").innerHTML = "Store " + time + " sec recording to waveform";
+        console.log(document.getElementById("recLengthDiv"));
     }
 
     storeRecord()
     {
-        const waveform = WaveformCollection.getWaveform(document.getElementById("mod1_0WaveformSelect").value);
+        const val = this.#wfs1.value;
+        const waveform = WaveformCollection.getWaveform(val);
         if (waveform == null) return;
 
         if (AudioWrapper.recordedWaveform == null) return;
 
         waveform.setSamples(AudioWrapper.recordedWaveform, AudioWrapper.samplerate);
+        WaveformCollection.clear(val);
     }
 }

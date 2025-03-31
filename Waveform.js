@@ -31,6 +31,16 @@ class Waveform
         return this.#waveform;
     }
 
+    getSample(i)
+    {
+        return this.#waveform[i];
+    }
+
+    getInvertedSample(i)
+    {
+        return -1 * this.#waveform[i] - 1;
+    }
+
     setSamples(waveform, samplerate = 44100)
     {
         this.#waveform = waveform;
@@ -40,18 +50,81 @@ class Waveform
     setWaveform(frequency, duration, samplerate, shape, amplitude = 1)
     {
         if (duration < 1/samplerate) return;
-
-        const pcmArray = new Int16Array(samplerate*duration);
+        const length = samplerate*duration;
+        const pcmArray = new Int16Array(length);
+        const samplesPerPeriod = samplerate / frequency;
         if (shape == "sine")
         {
-            for (let i = 0; i < samplerate*duration; i++) {
+            for (let i = 0; i < length; i++) {
                 const sample = Math.sin((2 * Math.PI * frequency * i) / samplerate);
                 pcmArray[i] = Math.floor(sample * 32768 * amplitude); 
             }
         }
+        if (shape == "square")
+        {
+            for (let i = 0; i < length; i++) {
+                let sample;
+                if (i % samplesPerPeriod < samplesPerPeriod / 2)
+                {
+                    sample = -32768 * amplitude;
+                }
+                else
+                {
+                    sample = 32767 * amplitude;
+                }
+                pcmArray[i] = sample;
+            }
+        }
+        if (shape == "sawtooth")
+        {
+            for (let i = 0; i < length; i++) {
+                let sample =Math.floor((amplitude * -32768) + (i % samplesPerPeriod) *((amplitude * 65535) / (samplesPerPeriod)));
+                pcmArray[i] = sample;
+            }
+        }
+        if (shape == "noise")
+        {
+            for (let i = 0; i < length; i++) {
+                let sample =Math.floor(amplitude*(Math.random() * 65535 - 32768));
+                pcmArray[i] = sample;
+            }
+        }
+        if (shape == "triangle")
+        {
+            for (let i = 0; i < length; i++) {
 
+                let sample;
+                if (i % samplesPerPeriod < samplesPerPeriod / 2)
+                {
+                    sample = Math.floor((amplitude * -32768) + (i % samplesPerPeriod) *((2*amplitude * 65535) / (samplesPerPeriod)));
+                }
+                else
+                {   
+                    sample = 0;
+                    sample = Math.floor((amplitude * 32768) - (i % samplesPerPeriod - (samplesPerPeriod/2)) *((2*amplitude * 65535) / (samplesPerPeriod)));
+                }
+
+                if (sample > 32767) sample = 32767;
+                if (sample < -32768) sample = - 32768;
+
+                pcmArray[i] = sample;
+        }
+        }
         this.#waveform = pcmArray;
         this.#samplerate = samplerate;
+    }
+
+    invert()
+    {
+        for (let i = 0; i < this.#waveform.length; i++)
+        {
+            this.#waveform[i] = -1 * this.#waveform[i] - 1;
+        }
+    }
+
+    reverse()
+    {
+        this.#waveform.reverse();
     }
 
     /*
@@ -94,6 +167,94 @@ class Waveform
     
         const buf = buffer;
         return new Blob([buf], { type: "audio/wav" });
+    }
+
+    add(wf1, wf2, wrap, positive)
+    {
+        if (wf1.samplerate != wf1.samplerate) return;
+
+
+        let pcmArray; 
+
+        //wrap no effect
+        if (wf2.length >= wf1.length)
+        {
+            pcmArray = new Int16Array(wf2.length);
+
+            for (let i = 0; i < wf2.length; i++)
+            {
+                let sample;
+                if (i < wf1.length)
+                {
+                    if (positive) sample = wf2.getSample(i) + wf1.getSample(i);
+                    else sample = wf2.getInvertedSample(i) + wf1.getSample(i);
+                    
+                    if (sample > 32767) sample = 32767;
+                    if (sample < -32768) sample = -32768; 
+                }
+                else
+                {
+                    if (positive) sample = wf2.getSample(i);
+                    else sample = wf2.getInvertedSample(i);
+                    
+                }
+                pcmArray[i] = sample;
+            }
+        }
+        else
+        {
+            pcmArray = new Int16Array(wf1.length);
+            if (wrap)
+            {
+                for (let i = 0; i < wf1.length; i++)
+                {   
+                    let sample;
+                    if (positive) sample = wf1.getSample(i) + wf2.getSample(i % wf2.length);
+                    else sample = wf1.getSample(i) + wf2.getInvertedSample(i % wf2.length);
+
+                    if (sample > 32767) sample = 32767;
+                    if (sample < -32768) sample = -32768;
+                    pcmArray[i] = sample;
+                }
+            }
+            else
+            {
+                for (let i = 0; i < wf1.length; i++)
+                    {
+                        let sample;
+                        if (i < wf2.length)
+                        {
+                            if (positive) sample = wf1.getSample(i) + wf2.getSample(i);
+                            else sample = wf1.getSample(i) + wf2.getInvertedSample(i);
+                        }
+                        else sample = wf1.getSample(i);
+                        
+                        if (sample > 32767) sample = 32767;
+                        if (sample < -32768) sample = -32768;
+                        pcmArray[i] = sample;
+                    }
+            }
+        }
+
+        this.setSamples(pcmArray, this.#samplerate);
+    }
+
+    amplify(factor, isRelative)
+    {
+        let computedFactor;
+        if (isRelative) computedFactor = factor;
+        else
+        {
+            computedFactor = Math.pow(10, factor/20);
+        }
+
+        for (let i = 0; i < this.#waveform.length; i++)
+        {       
+            let sample = Math.floor(this.#waveform[i] * computedFactor);
+            if (sample > 32767) sample = 32767;
+            if (sample < -32768) sample = -32768;
+            this.#waveform[i] = sample;
+        }
     }
 }
 

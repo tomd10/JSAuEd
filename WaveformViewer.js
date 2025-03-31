@@ -10,28 +10,10 @@ class WaveformViewer {
     constructor(_waveform) {
         this.#waveform = _waveform;
         
-        const mainWrapper = document.createElement("div");
-        mainWrapper.classList.add("waverformWrapperDiv");
-
-        const header = document.createElement("div");
-        header.classList.add("waveformHeaderDiv");
-        header.classList.add("header");
-        header.innerHTML = "Waveform " + this.#waveform.id;
-
-        mainWrapper.appendChild(header);
-
-        const wrapper = document.createElement("div");
-        wrapper.id = this.#waveform.id;
-        wrapper.classList.add("waveformDiv");
-        header.addEventListener("click", () => {
-            if (wrapper.classList.contains("invisible"))
-            {
-                wrapper.classList.remove("invisible");
-            }
-            else wrapper.classList.add("invisible");
-        });
-
-        mainWrapper.appendChild(wrapper);
+        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id);
+        const mainWrapper = hdr[0];
+        const wrapper = hdr[1];    
+        const header = hdr[2];
 
         const canvas = document.createElement("canvas");
         canvas.width = 800;
@@ -41,36 +23,16 @@ class WaveformViewer {
 
         this.#canvas = canvas;
 
-        const btnZoomIn = document.createElement("button");
-        btnZoomIn.classList.add("zoomInButton");
-        btnZoomIn.innerHTML = "Zoom In";
-        btnZoomIn.addEventListener("click", () => {
-            this.zoomIn();
-        });
+        const btnZoomIn = HTMLDrawer.getAuxButton("Zoom In", () => { this.zoomIn();});
         wrapper.appendChild(btnZoomIn);
 
-        const btnZoomOut = document.createElement("button");
-        btnZoomOut.classList.add("zoomOutButton");
-        btnZoomOut.innerHTML = "Zoom Out";
-        btnZoomOut.addEventListener("click", () => {
-            this.zoomOut();
-        });
+        const btnZoomOut = HTMLDrawer.getAuxButton("Zoom Out", () => {this.zoomOut(); });
         wrapper.appendChild(btnZoomOut);
 
-        const btnShiftLeft = document.createElement("button");
-        btnShiftLeft.classList.add("shiftLeftButton");
-        btnShiftLeft.innerHTML = "Shift Left";
-        btnShiftLeft.addEventListener("click", () => {
-            this.shiftLeft();
-        });
+        const btnShiftLeft = HTMLDrawer.getAuxButton("Shift Left",() => {this.shiftLeft();});
         wrapper.appendChild(btnShiftLeft);
 
-        const btnShiftRight = document.createElement("button");
-        btnShiftRight.classList.add("shiftRightButton");
-        btnShiftRight.innerHTML = "Shift Right";
-        btnShiftRight.addEventListener("click", () => {
-            this.shiftRight();
-        });
+        const btnShiftRight = HTMLDrawer.getAuxButton("Shift Right", () => {this.shiftRight();});
         wrapper.appendChild(btnShiftRight);
 
         const divScale = document.createElement("div");
@@ -109,6 +71,9 @@ class WaveformViewer {
         wrapper.appendChild(divSamplerate);
 
         document.getElementById("waves").appendChild(mainWrapper);
+
+        mainWrapper.appendChild(header);
+        mainWrapper.appendChild(wrapper);
         /*
         document.getElementById(this.#id + "zoomIn").addEventListener("click", () => {
             this.zoomIn();
@@ -154,6 +119,12 @@ class WaveformViewer {
         AudioWrapper.StopPlay();
     }
 
+    clear()
+    {
+        this.#scale = 2000;
+        this.#position = 0;
+        this.draw();
+    }
 
     setWaveform(waveform) {
         this.#waveform = waveform;
@@ -324,6 +295,11 @@ class WaveformViewer {
         else mili = "" + mili;
 
         return (mm + ":" + ss + ":" + mili);
+    }
+
+    getId()
+    {
+        return this.#waveform.id;
     }
 
 }

@@ -17,7 +17,7 @@ class AudioWrapper
 
     static samplerate = 44100;
     static recordingAvailable = true;
-
+    static #audioChunks;
     static #initialized = false;
 
     static async Init()
@@ -59,14 +59,14 @@ class AudioWrapper
 
         this.#mediaRecorder = new MediaRecorder(this.#stream);
         console.log(this.#mediaRecorder);
-        const audioChunks = [];
+        this.#audioChunks = [];
       
         this.#mediaRecorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
+            this.#audioChunks.push(event.data);
         };
 
         this.#mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            const audioBlob = new Blob(this.#audioChunks, { type: "audio/webm" });
             const arrayBuffer = await audioBlob.arrayBuffer();
       
             // Decode WebM/OGG into PCM using AudioContext
@@ -85,6 +85,9 @@ class AudioWrapper
     {
         this.StopRecord();
 
+        console.log(samples);
+        console.log(sampleRate);
+        console.log(!this.isPlaying && !this.isPaused);
         if (!this.isPlaying && !this.isPaused) {
             let float32Array = new Float32Array(samples.length);
             for (let i = 0; i < samples.length; i++) {
@@ -148,6 +151,7 @@ class AudioWrapper
         if (this.#recording == true) return;
         this.#recording = true;
         this.StopPlay();
+        this.#audioChunks = [];
         this.#mediaRecorder.start();
         console.log("Recording started");
     }

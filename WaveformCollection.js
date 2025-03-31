@@ -8,6 +8,16 @@ class WaveformCollection
 
     }
 
+    static clear(id)
+    {
+        this.viewers.forEach((wfv) => {
+            if (wfv.getId() == id)
+            {
+                wfv.clear();
+            }
+        });
+    }
+
     static getWaveform(id)
     {
         for (const wf of this.waveforms)
@@ -21,6 +31,8 @@ class WaveformCollection
     {
 
     }
+
+
 
     static init()
     {
