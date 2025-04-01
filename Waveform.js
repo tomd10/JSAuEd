@@ -36,6 +36,11 @@ class Waveform
         return this.#waveform[i];
     }
 
+    getFloatSample(i)
+    {
+        return this.#waveform[i] / 32768;
+    }
+
     getInvertedSample(i)
     {
         return -1 * this.#waveform[i] - 1;
@@ -311,7 +316,43 @@ class Waveform
 
     modulate(waveform, depth, wrap)
     {
+        let end = this.#waveform.length;
+        if (!wrap && this.#waveform.length > waveform.length) end = waveform.length;
 
+        for (let i = 0; i < end; i++)
+            {
+                this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i % waveform.length)/32767)*depth + 1 - depth));
+
+            }
+
+        return;
+        if (waveform.length > this.#waveform.length) end = this.#waveform.length;
+        else if (!wrap) end = waveform.length
+        if (!wrap)
+        {
+            if (this.#waveform.length >= waveform.length)
+            {
+                for (let i = 0; i < waveform.length; i++)
+                {
+                    this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i)/32767)*depth + 1 - depth));
+                }
+            }
+            else
+            {
+                for (let i = 0; i < this.#waveform.length; i++)
+                {
+                    this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i)/32767)*depth + 1 - depth));
+                }
+            }
+        }
+        else
+        {
+            for (let i = 0; i < this.#waveform.length; i++)
+            {
+                this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i % waveform.length)/32767)*depth + 1 - depth));
+                //console.log(this.#waveform[i]);
+            }
+        }
     }
 
     rectify(trim)
