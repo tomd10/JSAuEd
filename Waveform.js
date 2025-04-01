@@ -8,7 +8,7 @@ class Waveform
     constructor(id)
     {
         this.#id = id;
-        this.setWaveform(440, 10, 44100, "sine", 1);
+        this.setWaveform(440, 1, 44100, "sine", 1);
     }
 
     get samplerate()
@@ -39,6 +39,23 @@ class Waveform
     getInvertedSample(i)
     {
         return -1 * this.#waveform[i] - 1;
+    }
+
+    getRectifiedSample(i, trim = false)
+    {
+        
+        if (this.#waveform[i] >= 0) return this.getSample(i);
+        else 
+        {
+            if (!trim) return this.getInvertedSample(i);
+            else return 0;
+            
+        }
+    }
+
+    getTime()
+    {
+        return Math.floor(1000*this.#waveform.length/this.#samplerate);
     }
 
     setSamples(waveform, samplerate = 44100)
@@ -108,7 +125,13 @@ class Waveform
                 if (sample < -32768) sample = - 32768;
 
                 pcmArray[i] = sample;
+            }
         }
+        if (shape == "silence")
+        {
+            for (let i = 0; i < length; i++) {
+                pcmArray[i] = 0;
+            }
         }
         this.#waveform = pcmArray;
         this.#samplerate = samplerate;
@@ -254,6 +277,48 @@ class Waveform
             if (sample > 32767) sample = 32767;
             if (sample < -32768) sample = -32768;
             this.#waveform[i] = sample;
+        }
+    }
+
+    cut(mms, sss, mss, mme, sse, mse)
+    {
+        let startSamples = Math.floor(this.#samplerate * (60*mms + sss + mss/1000));
+        let endSamples = Math.floor(this.#samplerate * (60*mme + sse + mse/1000));
+
+        console.log(startSamples, endSamples);
+        console.log(this.#waveform);
+
+        let pcmSamples = new Int16Array(this.#waveform.length - (endSamples - startSamples));
+        let addedSamples = 0;
+
+        for (let i = 0; i < this.#waveform.length; i++)
+        {
+            if (i < startSamples || i > endSamples)
+            {
+                //console.log(this.#waveform[i]);
+                pcmSamples[addedSamples] = this.#waveform[i];
+                addedSamples = addedSamples + 1;
+            } 
+        }
+
+        console.log(pcmSamples);
+        console.log(this.#waveform.length);
+        this.#waveform = pcmSamples;
+
+
+        //this.#waveform.splice(startSamples, (endSamples - startSamples) + 1);
+    }
+
+    modulate(waveform, depth, wrap)
+    {
+
+    }
+
+    rectify(trim)
+    {
+        for (let i = 0; i < this.#waveform.length; i++)
+        {
+            this.#waveform[i] = this.getRectifiedSample(i, trim);
         }
     }
 }

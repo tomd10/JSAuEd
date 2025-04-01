@@ -4,7 +4,7 @@ class Play
     //Module 2
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Play audio");
+        const hdr = HTMLDrawer.getHeader("Play audio", "playaudio");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

@@ -11,7 +11,7 @@ class Generate
     //Module 3
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Generate");
+        const hdr = HTMLDrawer.getHeader("Generate", "generate");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -21,7 +21,7 @@ class Generate
 
         const txt1 = HTMLDrawer.getHelpText("Store ");
 
-        this.#shapeSelect = HTMLDrawer.getSelect(["sine", "square", "triangle", "sawtooth", "noise"]);
+        this.#shapeSelect = HTMLDrawer.getSelect(["sine", "square", "triangle", "sawtooth", "noise", "silence"]);
 
         const txt2 = HTMLDrawer.getHelpText(" with frequency ");
         this.#freqInput = HTMLDrawer.getTextInput("440");

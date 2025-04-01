@@ -4,7 +4,7 @@ class Reverse
     //Module 5
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Reverse");
+        const hdr = HTMLDrawer.getHeader("Reverse", "reverse");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

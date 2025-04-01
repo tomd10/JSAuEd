@@ -41,8 +41,7 @@ class AudioWrapper
         //RECORDING
         await navigator.mediaDevices.getUserMedia({ audio: true })
         .then(response => {this.#stream = response; this.recordingAvailable = true;})
-        .catch(err => {console.log(err); this.recordingAvailable = false;});
-        console.log("initA finished");
+        .catch(err => {this.recordingAvailable = false;});
 
     }
 
@@ -51,14 +50,11 @@ class AudioWrapper
                 
         if (!this.recordingAvailable || this.#stream == null)
             {
-                console.log("returning, no available or null");
+                console.log("Recording not available.");
                 return;
             } 
 
-        console.log(this.#stream);
-
         this.#mediaRecorder = new MediaRecorder(this.#stream);
-        console.log(this.#mediaRecorder);
         this.#audioChunks = [];
       
         this.#mediaRecorder.ondataavailable = (event) => {
@@ -75,8 +71,6 @@ class AudioWrapper
             //const sampleRate = stream.getAudioTracks()[0].getSettings().sampleRate;
             this.recordedWaveform = this.#float32ToInt16(audioBuffer.getChannelData(0));
             this.samplerate = this.#stream.getAudioTracks()[0].getSettings().sampleRate;
-              console.log("16-bit PCM Data:", this.recordedWaveform);
-              console.log(this.samplerate);
         };
     }
 
@@ -84,10 +78,6 @@ class AudioWrapper
     static PlayAudio(samples, sampleRate)
     {
         this.StopRecord();
-
-        console.log(samples);
-        console.log(sampleRate);
-        console.log(!this.isPlaying && !this.isPaused);
         if (!this.isPlaying && !this.isPaused) {
             let float32Array = new Float32Array(samples.length);
             for (let i = 0; i < samples.length; i++) {
@@ -113,7 +103,6 @@ class AudioWrapper
         }
         else if (!this.isPlaying && this.isPaused)
         {
-            console.log(this.audioContext.state);
             this.audioContext.resume();
             this.isPaused = false;
             this.isPlaying = true;
@@ -153,7 +142,6 @@ class AudioWrapper
         this.StopPlay();
         this.#audioChunks = [];
         this.#mediaRecorder.start();
-        console.log("Recording started");
     }
 
     static StopRecord()
@@ -162,7 +150,6 @@ class AudioWrapper
         if (this.#recording == false) return;
         this.#recording = false;
         this.#mediaRecorder.stop();
-        console.log("Recording stopped");
     }
 
     static #float32ToInt16(float32Array) {

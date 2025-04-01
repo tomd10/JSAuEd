@@ -59,15 +59,26 @@ class HTMLDrawer
         return button;
     }
 
-    static getHeader(txt)
+    static getHeader(txt, id)
     {
         const mainWrapper = document.createElement("div");
+        mainWrapper.id = id;
         mainWrapper.classList.add("operationWrapperDiv");
+        mainWrapper.addEventListener("dragover", (ev) => {ev.preventDefault();});
+        mainWrapper.addEventListener("drop", (ev) => {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+
+            console.log("Dragged " + data + " into " + id);
+          
+        });
 
         const wrapper = document.createElement("div");
         wrapper.classList.add("operationDiv");
+
         
         const header = document.createElement("div");
+        header.id = id + "header";
         header.innerHTML = txt;
         header.classList.add("operationHeaderDiv");
         header.addEventListener("click", () => {
@@ -77,6 +88,8 @@ class HTMLDrawer
             }
             else wrapper.classList.add("invisible");
         });
+        header.setAttribute("draggable", "true");
+        header.addEventListener("dragstart", (ev) => {ev.dataTransfer.setData("text", id);});
 
         let headerRet = [mainWrapper, wrapper, header];
         this.#headers.push(headerRet);

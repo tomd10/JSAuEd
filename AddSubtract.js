@@ -9,7 +9,7 @@ class AddSubtract
     //Module 6
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Add/Subtract");
+        const hdr = HTMLDrawer.getHeader("Add/Subtract", "addsubtract");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

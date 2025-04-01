@@ -6,6 +6,7 @@ class ModuleCollection
 
     }
 
+
     static init()
     {
         let mod0 = new Play();
@@ -24,5 +25,11 @@ class ModuleCollection
         this.#modules.push(mod6);
         let mod7 = new Amplify();
         this.#modules.push(mod7);
+        let mod8 = new Cut();
+        this.#modules.push(mod8);
+        let mod9 = new AM();
+        this.#modules.push(mod9);
+        let mod10 = new Rectify();
+        this.#modules.push(mod10);
     }
 }

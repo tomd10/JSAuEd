@@ -1,30 +1,49 @@
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
         }
+
+        #container
+        {
+            display: flex;
+            flex-flow: column nowrap;
+            width: 95%;
+            padding: 2rem 1.5rem;
+            margin: 0 auto;
+        }
+
         canvas {
             border: none;
             background-color: #fff;
             
         }
-        .waverformWrapperDiv
+        .waveformWrapperDiv
         {
             border: 3px solid red;
-            margin: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .operationHeaderDiv
+        {
+            cursor: move;
+            user-select: none;
         }
 
         .operationWrapperDiv
         {
             border: 3px solid blue;
-            margin: 5px;
+            margin-bottom: 1.5rem;
         }
 
         .invisible
         {
             display: none;
         }
+
+        .waves
+        {
+            margin-bottom: 1rem;
+        }
+

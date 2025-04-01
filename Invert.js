@@ -4,7 +4,7 @@ class Invert
     //Module 4
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Invert");
+        const hdr = HTMLDrawer.getHeader("Invert", "invert");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

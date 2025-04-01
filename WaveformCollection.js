@@ -55,7 +55,6 @@ class WaveformCollection
     {
         select.innerHTML = "";
         this.waveforms.forEach((wfv) => {
-            console.log(wfv.id);
             let opt = document.createElement("option");
             opt.innerHTML = wfv.id;
             opt.value = wfv.id;

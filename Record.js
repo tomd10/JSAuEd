@@ -3,7 +3,7 @@ class Record
     #wfs1;
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Record");
+        const hdr = HTMLDrawer.getHeader("Record", "record");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

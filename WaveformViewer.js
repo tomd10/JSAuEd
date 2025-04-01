@@ -10,7 +10,7 @@ class WaveformViewer {
     constructor(_waveform) {
         this.#waveform = _waveform;
         
-        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id);
+        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id);
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -70,7 +70,7 @@ class WaveformViewer {
         divSamplerate.id = this.#waveform.id + "samplerate";
         wrapper.appendChild(divSamplerate);
 
-        document.getElementById("waves").appendChild(mainWrapper);
+        document.getElementById("modules").appendChild(mainWrapper);
 
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
@@ -179,7 +179,6 @@ class WaveformViewer {
     }
 
     draw(color = 'blue') {
-        console.log(this.getTimestamps());
         const width = this.#canvas.width;
         const height = this.#canvas.height;
         const ctx = this.#canvas.getContext('2d');
@@ -221,7 +220,7 @@ class WaveformViewer {
         //WAVEFORM
         ctx.beginPath();
         ctx.strokeStyle = color;
-        console.log("Drawing from pts " + positionOffset + " to " + Math.floor(positionOffset + (this.#waveform.samplerate / 250) * this.#scale));
+        //console.log("Drawing from pts " + positionOffset + " to " + Math.floor(positionOffset + (this.#waveform.samplerate / 250) * this.#scale));
         for (let i = positionOffset; i < Math.floor(positionOffset + (this.#waveform.samplerate / 250) * this.#scale); i++) {
             if (i % scaler == 0) {
                 let actualXPos = Math.floor(canvasXPos);
@@ -230,7 +229,7 @@ class WaveformViewer {
                     continue;
                 }
 
-                actualYPos = Math.floor(height * (this.#waveform.waveform[i] + 32768) / 65535);
+                actualYPos = height - (Math.floor(height * (this.#waveform.waveform[i] + 32768) / 65535));
                 if (i == positionOffset) {
                     ctx.moveTo(actualXPos, actualYPos);
                 } else {
