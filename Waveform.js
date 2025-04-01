@@ -321,5 +321,16 @@ class Waveform
             this.#waveform[i] = this.getRectifiedSample(i, trim);
         }
     }
+
+    offset(offset)
+    {
+        for (let i = 0; i < this.#waveform.length; i++)
+        {
+            let sample = this.#waveform[i] + (32767 * offset);
+            if (sample > 32767) sample = 32767;
+            if (sample < -32768) sample = -32768;
+            this.#waveform[i] = sample;
+        }
+    }
 }
 

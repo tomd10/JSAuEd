@@ -59,23 +59,22 @@ class HTMLDrawer
         return button;
     }
 
-    static getHeader(txt, id)
+    static getHeader(txt, id, hiddenByDefault = true)
     {
         const mainWrapper = document.createElement("div");
         mainWrapper.id = id;
         mainWrapper.classList.add("operationWrapperDiv");
         mainWrapper.addEventListener("dragover", (ev) => {ev.preventDefault();});
+
         mainWrapper.addEventListener("drop", (ev) => {
             ev.preventDefault();
             const data = ev.dataTransfer.getData("text");
-
-            console.log("Dragged " + data + " into " + id);
-          
+            HTMLDrawer.swap(data, id);        
         });
 
         const wrapper = document.createElement("div");
         wrapper.classList.add("operationDiv");
-
+        if (hiddenByDefault) wrapper.classList.add("invisible");
         
         const header = document.createElement("div");
         header.id = id + "header";
@@ -127,10 +126,35 @@ class HTMLDrawer
     {
         const input = document.createElement("input");
         input.type = "checkbox";
-        input.setAttribute("checked", "");
-        input.value = val;
+        input.checked = val;
+        //input.value = val;
 
         this.#checkboxes.push(input);
         return input;
+    }
+
+    static swap(idSrc, idDst)
+    {
+        if (idSrc == idDst) return;
+
+        let indexSrc, indexDst;
+        let src;
+        for (let i = 0; i < HTMLDrawer.#headers.length; i++)
+        {
+            console.log(HTMLDrawer.#headers[i][0].id);
+            if (HTMLDrawer.#headers[i][0].id == idSrc) {indexSrc = i; src = this.#headers[i];}
+            if (HTMLDrawer.#headers[i][0].id == idDst) indexDst = i;
+        }
+
+        this.#headers.splice(indexSrc, 1);
+        //console.log(src);
+        this.#headers.splice(indexDst, 0, src);
+        //this.#headers.forEach((el) => {console.log(el)});
+        //console.log("xxxx");
+        const wrapper = document.getElementById("modules");
+        wrapper.innerHTML = "";
+
+        this.#headers.forEach((el) => {console.log(el); wrapper.appendChild(el[0]);});
+        
     }
 }

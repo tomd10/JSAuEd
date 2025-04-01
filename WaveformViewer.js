@@ -10,7 +10,7 @@ class WaveformViewer {
     constructor(_waveform) {
         this.#waveform = _waveform;
         
-        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id);
+        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id, false);
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

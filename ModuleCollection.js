@@ -31,5 +31,7 @@ class ModuleCollection
         this.#modules.push(mod9);
         let mod10 = new Rectify();
         this.#modules.push(mod10);
+        let mod11 = new DCOffset();
+        this.#modules.push(mod11);
     }
 }
