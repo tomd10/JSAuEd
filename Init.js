@@ -29,6 +29,7 @@ const sample2 = new Array()
 AudioWrapper.Init();
 WaveformCollection.init();
 ModuleCollection.init();
+HTMLDrawer.draw();
 
 
 /*

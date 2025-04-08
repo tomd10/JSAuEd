@@ -41,12 +41,10 @@ class AM
 
         lineDiv2.appendChild(this.#wrapChk);
         lineDiv2.appendChild(helpDiv4);
-        lineDiv2.appendChild(modulateButton);
+        lineDiv1.appendChild(modulateButton);
 
         wrapper.appendChild(lineDiv1);
         wrapper.appendChild(lineDiv2);
-
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
     modulate()

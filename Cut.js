@@ -48,7 +48,6 @@ class Cut
         wrapper.appendChild(lineDiv2);
         wrapper.appendChild(lineDiv3);
         
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
     loadStart()

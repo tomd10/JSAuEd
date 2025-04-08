@@ -33,7 +33,6 @@ class Amplify
         lineDiv1.appendChild(amplifyButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
 

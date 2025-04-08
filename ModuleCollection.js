@@ -33,7 +33,7 @@ class ModuleCollection
         this.#modules.push(mod10);
         let mod11 = new DCOffset();
         this.#modules.push(mod11);
-        let mod12 = new AM();
-        this.#modules.push(mod12);
+        //let mod12 = new AM();
+        //this.#modules.push(mod12);
     }
 }

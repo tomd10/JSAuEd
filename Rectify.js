@@ -33,7 +33,6 @@ class Rectify
         lineDiv1.appendChild(rectifyButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
 

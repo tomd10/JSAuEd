@@ -28,7 +28,6 @@ class Play
         lineDiv1.appendChild(stopButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
     play()

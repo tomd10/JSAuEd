@@ -5,6 +5,14 @@ class WaveformViewer {
     #position = 0;
     #milis = 0;
 
+    #divTimestamp0;
+    #divTimestamp1;
+    #divTimestamp2;
+    #divTimestamp3;
+    #divTimestamp4;
+    #divScale;
+    #divSamplerate;
+
     //#visible = 1;
     #audio;
     constructor(_waveform) {
@@ -15,91 +23,68 @@ class WaveformViewer {
         const wrapper = hdr[1];    
         const header = hdr[2];
 
-        const canvas = document.createElement("canvas");
-        canvas.width = 800;
-        canvas.height = 300;
-        canvas.classList.add("waveformCanvas");
-        wrapper.appendChild(canvas);
+        this.#canvas = HTMLDrawer.getCanvas();
+        wrapper.appendChild(this.#canvas);
 
-        this.#canvas = canvas;
+        
+
+        const dashboard = document.createElement("div");
+        dashboard.classList.add("dashboard");
 
         const btnZoomIn = HTMLDrawer.getAuxButton("Zoom In", () => { this.zoomIn();});
-        wrapper.appendChild(btnZoomIn);
-
         const btnZoomOut = HTMLDrawer.getAuxButton("Zoom Out", () => {this.zoomOut(); });
-        wrapper.appendChild(btnZoomOut);
-
         const btnShiftLeft = HTMLDrawer.getAuxButton("Shift Left",() => {this.shiftLeft();});
-        wrapper.appendChild(btnShiftLeft);
-
         const btnShiftRight = HTMLDrawer.getAuxButton("Shift Right", () => {this.shiftRight();});
-        wrapper.appendChild(btnShiftRight);
 
-        const divScale = document.createElement("div");
-        divScale.classList.add("scaleDiv");
-        divScale.id = this.#waveform.id + "scale";
-        wrapper.appendChild(divScale);
+        dashboard.appendChild(btnZoomIn);
+        dashboard.appendChild(btnZoomOut);
+        dashboard.appendChild(btnShiftLeft);
+        dashboard.appendChild(btnShiftRight);
 
-        const divTimestamp0 = document.createElement("div");
-        divTimestamp0.classList.add("timestamp0Div");
-        divTimestamp0.id = this.#waveform.id + "timestamp0";
-        wrapper.appendChild(divTimestamp0);
+        const data = document.createElement("div");
+        data.classList.add("waveform-data");
 
-        const divTimestamp1 = document.createElement("div");
-        divTimestamp1.classList.add("timestamp1Div");
-        divTimestamp1.id = this.#waveform.id + "timestamp1";
-        wrapper.appendChild(divTimestamp1);
+        this.#divScale = document.createElement("div");
+        this.#divScale.classList.add("scaleDiv");
+        this.#divScale.id = this.#waveform.id + "scale";
+        data.appendChild(this.#divScale);
 
-        const divTimestamp2 = document.createElement("div");
-        divTimestamp2.classList.add("timestamp2Div");
-        divTimestamp2.id = this.#waveform.id + "timestamp2";
-        wrapper.appendChild(divTimestamp2);
+        this.#divTimestamp0 = document.createElement("div");
+        this.#divTimestamp0.classList.add("timestamp0Div");
+        this.#divTimestamp0.id = this.#waveform.id + "timestamp0";
+        data.appendChild(this.#divTimestamp0);
 
-        const divTimestamp3 = document.createElement("div");
-        divTimestamp3.classList.add("timestamp3Div");
-        divTimestamp3.id = this.#waveform.id + "timestamp3";
-        wrapper.appendChild(divTimestamp3);
+        this.#divTimestamp1 = document.createElement("div");
+        this.#divTimestamp1.classList.add("timestamp1Div");
+        this.#divTimestamp1.id = this.#waveform.id + "timestamp1";
+        data.appendChild(this.#divTimestamp1);
 
-        const divTimestamp4 = document.createElement("div");
-        divTimestamp4.classList.add("timestamp4Div");
-        divTimestamp4.id = this.#waveform.id + "timestamp4";
-        wrapper.appendChild(divTimestamp4);
+        this.#divTimestamp2 = document.createElement("div");
+        this.#divTimestamp2.classList.add("timestamp2Div");
+        this.#divTimestamp2.id = this.#waveform.id + "timestamp2";
+        data.appendChild(this.#divTimestamp2);
 
-        const divSamplerate = document.createElement("div");
-        divSamplerate.classList.add("samplerateDiv");
-        divSamplerate.id = this.#waveform.id + "samplerate";
-        wrapper.appendChild(divSamplerate);
+        this.#divTimestamp3 = document.createElement("div");
+        this.#divTimestamp3.classList.add("timestamp3Div");
+        this.#divTimestamp3.id = this.#waveform.id + "timestamp3";
+        data.appendChild(this.#divTimestamp3);
 
-        document.getElementById("modules").appendChild(mainWrapper);
+        this.#divTimestamp4 = document.createElement("div");
+        this.#divTimestamp4.classList.add("timestamp4Div");
+        this.#divTimestamp4.id = this.#waveform.id + "timestamp4";
+        data.appendChild(this.#divTimestamp4);
+
+        this.#divSamplerate = document.createElement("div");
+        this.#divSamplerate.classList.add("samplerateDiv");
+        this.#divSamplerate.id = this.#waveform.id + "samplerate";
+        data.appendChild(this.#divSamplerate);
+
+        wrapper.appendChild(dashboard);
+        wrapper.appendChild(data);
 
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
-        /*
-        document.getElementById(this.#id + "zoomIn").addEventListener("click", () => {
-            this.zoomIn();
-        });
-        document.getElementById(this.#id + "zoomOut").addEventListener("click", () => {
-            this.zoomOut();
-        });
-        document.getElementById(this.#id + "timeLeft").addEventListener("click", () => {
-            this.shiftLeft();
-        });
-        document.getElementById(this.#id + "timeRight").addEventListener("click", () => {
-            this.shiftRight();
-        });
 
-        document.getElementById(this.#id + "play").addEventListener("click", () => {
-            this.play();
-        });
-        
-        document.getElementById(this.#id + "pause").addEventListener("click", () => {
-            this.pause();
-        });
-        
-        document.getElementById(this.#id + "stop").addEventListener("click", () => {
-            this.stop();
-        });
-        */
         this.#milis = (1000 * this.#waveform.length) / this.#waveform.samplerate;
         this.draw();
     }
@@ -245,13 +230,13 @@ class WaveformViewer {
         ctx.stroke();
 
         //Scale and timestamp labels
-        document.getElementById(this.#waveform.id + "scale").innerHTML = this.getScale();
-        document.getElementById(this.#waveform.id + "timestamp0").innerHTML = this.getTimestamps()[0];
-        document.getElementById(this.#waveform.id + "timestamp1").innerHTML = this.getTimestamps()[1];
-        document.getElementById(this.#waveform.id + "timestamp2").innerHTML = this.getTimestamps()[2];
-        document.getElementById(this.#waveform.id + "timestamp3").innerHTML = this.getTimestamps()[3];
-        document.getElementById(this.#waveform.id + "timestamp4").innerHTML = this.getTimestamps()[4];
-        document.getElementById(this.#waveform.id + "samplerate").innerHTML = this.#waveform.samplerate + " Hz";
+        this.#divScale.innerHTML = this.getScale();
+        this.#divTimestamp0.innerHTML = this.getTimestamps()[0];
+        this.#divTimestamp1.innerHTML = this.getTimestamps()[1];
+        this.#divTimestamp2.innerHTML = this.getTimestamps()[2];
+        this.#divTimestamp3.innerHTML = this.getTimestamps()[3];
+        this.#divTimestamp4.innerHTML = this.getTimestamps()[4];
+        this.#divSamplerate.innerHTML = this.#waveform.samplerate + " Hz";
     }
 
     getScale() {

@@ -9,6 +9,7 @@ class HTMLDrawer
     static #textInputs = [];
     static #selects = [];
     static #checkboxes = [];
+    static #canvases = [];
 
     static getWaveformSelect()
     {
@@ -17,6 +18,14 @@ class HTMLDrawer
         WaveformCollection.setWaveformSelect(wfSelect);
         this.#waveformSelects.push(wfSelect);
         return wfSelect;
+    }
+
+    static getCanvas()
+    {
+        const canvas = document.createElement("canvas");
+        canvas.classList.add("waveformCanvas");
+        this.#canvases.push(canvas);
+        return canvas
     }
 
     static getLineDiv()
@@ -136,6 +145,8 @@ class HTMLDrawer
     static swap(idSrc, idDst)
     {
         if (idSrc == idDst) return;
+        if (idSrc.startsWith("wf") && !idDst.startsWith("wf")) return;
+        if (idDst.startsWith("wf") && !idSrc.startsWith("wf")) return;
 
         let indexSrc, indexDst;
         let src;
@@ -147,14 +158,48 @@ class HTMLDrawer
         }
 
         this.#headers.splice(indexSrc, 1);
-        //console.log(src);
         this.#headers.splice(indexDst, 0, src);
-        //this.#headers.forEach((el) => {console.log(el)});
-        //console.log("xxxx");
-        const wrapper = document.getElementById("modules");
-        wrapper.innerHTML = "";
-
-        this.#headers.forEach((el) => {console.log(el); wrapper.appendChild(el[0]);});
         
+        this.draw();
+    }
+
+    static draw()
+    {
+        const container = document.getElementById("container");
+        container.innerHTML = "";
+
+        const waveforms = document.createElement("div");
+        waveforms.id = "waveforms";
+        const favOps = document.createElement("div");
+        favOps.id = "favOps";
+        const ops = document.createElement("div");
+        ops.id = "ops";
+
+        let count = 0;
+        for (let i = 0; i < HTMLDrawer.#headers.length; i++)
+        {
+            if (HTMLDrawer.#headers[i][0].id.startsWith("wf"))
+            {
+                waveforms.appendChild(HTMLDrawer.#headers[i][0]);
+            }
+            else
+            {
+                if (count < 5)
+                {
+                    favOps.appendChild(HTMLDrawer.#headers[i][0]);
+                    count = count + 1;
+                }
+                else
+                {
+                    ops.appendChild(HTMLDrawer.#headers[i][0]);
+                }
+            }
+        }
+    
+
+        container.appendChild(waveforms);
+        container.appendChild(favOps);
+        container.appendChild(ops);
+
     }
 }

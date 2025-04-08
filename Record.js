@@ -39,7 +39,6 @@ class Record
 
         wrapper.appendChild(lineDiv1);
         wrapper.appendChild(lineDiv2);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
 

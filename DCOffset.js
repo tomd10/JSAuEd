@@ -32,7 +32,6 @@ class DCOffset
         lineDiv1.appendChild(offsetButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
 

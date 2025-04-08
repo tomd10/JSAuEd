@@ -321,7 +321,7 @@ class Waveform
 
         for (let i = 0; i < end; i++)
             {
-                this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i % waveform.length)/32767)*depth + 1 - depth));
+                this.#waveform[i] = Math.floor(this.#waveform[i] * (((waveform.getSample(i % waveform.length)+32768)/65535)*depth + 1 - depth));
 
             }
 

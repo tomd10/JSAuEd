@@ -25,7 +25,6 @@ class Reverse
         lineDiv1.appendChild(reverseButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
 

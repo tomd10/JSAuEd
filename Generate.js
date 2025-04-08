@@ -60,7 +60,6 @@ class Generate
         lineDiv1.appendChild(storeButton);
 
         wrapper.appendChild(lineDiv1);
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
     store()

@@ -70,8 +70,6 @@ class ImportExport
         wrapper.appendChild(lineDiv1);
         wrapper.appendChild(lineDiv2);
         wrapper.appendChild(lineDiv3);
-        
-        document.getElementById("modules").appendChild(mainWrapper);
     }
 
     async uploaded()
