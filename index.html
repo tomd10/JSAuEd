@@ -12,7 +12,6 @@
     <script src="WaveformViewer.js"></script>
     <script src="ImportExport.js"></script>
     <script src="Record.js"></script>
-    <script src="Play.js"></script>
     <script src="Generate.js"></script>
     <script src="Invert.js"></script>
     <script src="Reverse.js"></script>
@@ -22,6 +21,16 @@
     <script src="AM.js"></script>
     <script src="Rectify.js"></script>
     <script src="DCOffset.js"></script>
+    <script src="FM.js"></script>
+    <script src="PM.js"></script>
+    <script src="XYPlotter.js"></script>
+
+    <script src="StaticData.js"></script>
+    <script src="ScriptRectifier.js"></script>
+    <script src="ScriptSquare.js"></script>
+    <script src="ScriptTremolo.js"></script>
+    <script src="ScriptThreePhase.js"></script>
+    <script src="ScriptModulations.js"></script>
     <link rel="stylesheet" href="appstyle.css">
 </head>
 <body>
@@ -31,11 +40,18 @@
         </div>
     </div>
 
+    <div class="popUp-overlay invisible">
+        <div class="actual-popup" id="popupWrapper">
+            <div id="popupHeader">
 
+            </div>
+            <div id="popupContent">
+
+            </div>
+            <button type="button" id="popupButton" class="auxButton">OK</button>
+        </div>
+      </div>
 
     <script src="Init.js"></script>
-    <script>
-
-    </script>
 </body>
 </html>

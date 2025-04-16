@@ -5,6 +5,7 @@ class Generate
     #freqInput;
     #amplInput;
     #durInput;
+    #phaseInput;
     #srInput;
 
     #wfs1
@@ -23,16 +24,19 @@ class Generate
 
         this.#shapeSelect = HTMLDrawer.getSelect(["sine", "square", "triangle", "sawtooth", "noise", "silence"]);
 
-        const txt2 = HTMLDrawer.getHelpText(" with frequency ");
+        const txt2 = HTMLDrawer.getHelpText("with frequency");
         this.#freqInput = HTMLDrawer.getTextInput("440");
 
-        const txt3 = HTMLDrawer.getHelpText(" Hz, amplitude ");
+        const txt3 = HTMLDrawer.getHelpText("Hz, amplitude");
         this.#amplInput = HTMLDrawer.getTextInput("1");
 
-        const txt4 = HTMLDrawer.getHelpText(" , duration ");
+        const txt31 = HTMLDrawer.getHelpText(", phase")
+        this.#phaseInput = HTMLDrawer.getTextInput("0");
+
+        const txt4 = HTMLDrawer.getHelpText("degrees , duration ");
         this.#durInput = HTMLDrawer.getTextInput("1");
 
-        const txt5 = HTMLDrawer.getHelpText(" and sample rate ");
+        const txt5 = HTMLDrawer.getHelpText("s and sample rate ");
         this.#srInput = HTMLDrawer.getTextInput("44100");
 
         const txt6 = HTMLDrawer.getHelpText(" Hz into waveform ");     
@@ -51,6 +55,8 @@ class Generate
         lineDiv1.appendChild(this.#freqInput);
         lineDiv1.appendChild(txt3);
         lineDiv1.appendChild(this.#amplInput);
+        lineDiv1.appendChild(txt31);
+        lineDiv1.appendChild(this.#phaseInput);
         lineDiv1.appendChild(txt4);
         lineDiv1.appendChild(this.#durInput);
         lineDiv1.appendChild(txt5);
@@ -77,13 +83,16 @@ class Generate
         let amplitude = parseFloat(this.#amplInput.value);
         if (amplitude > 1.0 || amplitude < 0 || isNaN(amplitude)) return;
 
+        let phase = parseFloat(this.#phaseInput.value);
+        if (phase < 0.0 || phase > 360.0 || isNaN(phase)) return;
+
         let duration = parseFloat(this.#durInput.value);
         if (duration < 0.005 || duration > 3600 || isNaN(duration)) return;
 
         let samplerate = parseInt(this.#srInput.value);
         if (samplerate < 8000 || samplerate > 96000 || isNaN(samplerate)) return;
 
-        waveform.setWaveform(freq, duration, samplerate, shape, amplitude);
+        waveform.setWaveform(freq, duration, samplerate, shape, amplitude, phase);
         WaveformCollection.redraw();
 
     }

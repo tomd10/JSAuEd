@@ -50,6 +50,7 @@ class HTMLDrawer
     {
         const button = document.createElement("button");
         button.classList.add("commandButton");
+        button.type="button";
         button.innerHTML = txt;
         button.addEventListener("click", func);
 
@@ -61,6 +62,7 @@ class HTMLDrawer
     {
         const button = document.createElement("button");
         button.classList.add("auxButton");
+        button.type="button";
         button.innerHTML = txt;
         button.addEventListener("click", func);
 
@@ -68,11 +70,19 @@ class HTMLDrawer
         return button;
     }
 
-    static getHeader(txt, id, hiddenByDefault = true)
+    static getHeader(txt, id, isWaveform = false)
     {
         const mainWrapper = document.createElement("div");
         mainWrapper.id = id;
-        mainWrapper.classList.add("operationWrapperDiv");
+        if (isWaveform)
+        {
+            mainWrapper.classList.add("waveformWrapperDiv");
+        }
+        else
+        {
+            mainWrapper.classList.add("operationWrapperDiv");
+        }
+        
         mainWrapper.addEventListener("dragover", (ev) => {ev.preventDefault();});
 
         mainWrapper.addEventListener("drop", (ev) => {
@@ -82,19 +92,41 @@ class HTMLDrawer
         });
 
         const wrapper = document.createElement("div");
-        wrapper.classList.add("operationDiv");
-        if (hiddenByDefault) wrapper.classList.add("invisible");
+        if (isWaveform)
+        {
+            wrapper.classList.add("waveformDiv");
+        }
+        else
+        {
+            wrapper.classList.add("operationDiv");
+        }
+        
+        //if (hiddenByDefault) wrapper.classList.add("invisible");
         
         const header = document.createElement("div");
         header.id = id + "header";
         header.innerHTML = txt;
-        header.classList.add("operationHeaderDiv");
+
+        if (isWaveform)
+        {
+            header.classList.add("waveformHeaderDiv");
+        }
+        else
+        {
+            header.classList.add("operationHeaderDiv");
+        }
+
+        
         header.addEventListener("click", () => {
             if (wrapper.classList.contains("invisible"))
             {
                 wrapper.classList.remove("invisible");
             }
             else wrapper.classList.add("invisible");
+        });
+
+        header.addEventListener("dblclick", () => {
+            HTMLDrawer.moveTop(id);
         });
         header.setAttribute("draggable", "true");
         header.addEventListener("dragstart", (ev) => {ev.dataTransfer.setData("text", id);});
@@ -152,7 +184,6 @@ class HTMLDrawer
         let src;
         for (let i = 0; i < HTMLDrawer.#headers.length; i++)
         {
-            console.log(HTMLDrawer.#headers[i][0].id);
             if (HTMLDrawer.#headers[i][0].id == idSrc) {indexSrc = i; src = this.#headers[i];}
             if (HTMLDrawer.#headers[i][0].id == idDst) indexDst = i;
         }
@@ -201,5 +232,51 @@ class HTMLDrawer
         container.appendChild(favOps);
         container.appendChild(ops);
 
+        for (let i = 0; i < HTMLDrawer.#canvases.length - 1; i++)
+        {
+            HTMLDrawer.#canvases[i].width = 0.9*HTMLDrawer.#canvases[i].parentElement.getBoundingClientRect().width;
+            HTMLDrawer.#canvases[i].height = 0.19*HTMLDrawer.#canvases[i].parentElement.getBoundingClientRect().width;
+        }
+
+        HTMLDrawer.#canvases[HTMLDrawer.#canvases.length-1].width = 0.9*HTMLDrawer.#canvases[HTMLDrawer.#canvases.length-1].parentElement.getBoundingClientRect().width;
+        HTMLDrawer.#canvases[HTMLDrawer.#canvases.length-1].height = 0.9*HTMLDrawer.#canvases[HTMLDrawer.#canvases.length-1].parentElement.getBoundingClientRect().width;
+        WaveformCollection.redraw();
+    }
+
+    static moveTop(id)
+    {
+        let indexSrc;
+        let src;
+        for (let i = 0; i < HTMLDrawer.#headers.length; i++)
+        {
+            if (HTMLDrawer.#headers[i][0].id == id) {indexSrc = i; src = this.#headers[i];}
+        }
+
+        this.#headers.splice(indexSrc, 1);
+        this.#headers.unshift(src);
+        
+        this.draw();
+    }
+
+    static hidePopup()
+    {
+        document.getElementsByTagName('body')[0].classList.remove('modalOpen');
+        document.getElementsByTagName('html')[0].classList.remove('modalOpen');
+        document.getElementsByClassName("popUp-overlay")[0].classList.add("invisible");
+    }
+
+    static showPopup(header, text, type)
+    {
+        document.getElementsByTagName('body')[0].classList.add('modalOpen');
+        document.getElementsByTagName('html')[0].classList.add('modalOpen');
+        document.getElementsByClassName("popUp-overlay")[0].classList.remove("invisible");
+
+        document.getElementById("popupHeader").innerHTML = header;
+        document.getElementById("popupContent").innerHTML = text;
+
+        if (type == "info") document.getElementById("popupWrapper").style.backgroundColor = "#cfffdb";
+        else if (type == "error") document.getElementById("popupWrapper").style.backgroundColor = "#ffd4cc";
+        
+        document.getElementById("popupButton").focus();
     }
 }

@@ -32,7 +32,7 @@
         #favOps {
             width: 15%;
         }
-        
+
         #ops {
             width: calc(95% + 2rem);
             display: grid;
@@ -43,21 +43,18 @@
         canvas {
             border: none;
             background-color: #fff;
+            margin: 0 auto;
             
         }
-        .waveformWrapperDiv
-        {
-            border: 3px solid red;
-            margin-bottom: 0.5rem;
-        }
 
-        .operationHeaderDiv
+        .operationHeaderDiv, .waveformHeaderDiv
         {
             cursor: move;
             user-select: none;
+            text-align: center;
         }
 
-        .operationWrapperDiv
+        .operationWrapperDiv, .waveformWrapperDiv
         {
             border: 3px solid blue;
             margin-bottom: 0.5rem;
@@ -75,7 +72,7 @@
 
         #favOps
         {
-            background-color:cyan;
+            background-color:#d2ffff;
         }
 
 
@@ -98,7 +95,7 @@
             display: inline;
         }
         
-        .operationHeaderDiv
+        .operationHeaderDiv, .waveformHeaderDiv
         {
             background-color:azure;
         }
@@ -119,4 +116,218 @@
         {
             font-family: Consolas;
         }
+
+        /*--------------------*/
+        #waveforms .waveformHeaderDiv { 
+            font-size: 2rem;
+            padding: 0.5rem 0;
+            font-weight: bold;
+            border-bottom: 3px solid black;
+        }
+        
+        #waveforms .waveformDiv {
+            padding: 1rem;
+            display: flex;
+            flex-flow: column nowrap;
+        }
+        
+        #waveforms .waveformDiv.invisible {
+            display: none;
+        }
+        
+        .waveform-data {
+            position: absolute;
+            width: 90%;
+            height: calc(100% - 3rem);
+            top: 1rem;
+            left: 0;
+            margin: 0 5%;
+        }
+        
+        .miscChar {
+            position: absolute;
+            bottom: 100%;
+        }
+        
+        .miscChar.scale {
+            left: 0;
+        }
+        
+        .miscChar.samplerate {
+            right: 0;
+        }
+        
+        .timestamp {
+            top: 100%;
+            position: absolute;
+            font-size: 0.7rem;
+        }
+        
+        .timestamp.notch1 {
+            left: 0;
+        }
+        
+        .timestamp.notch2 {
+            left: 25%;
+        }
+        
+        .timestamp.notch3 {
+            left: 50%;
+        }
+        
+        .timestamp.notch4 {
+            left: 75%;
+        }
+        
+        .timestamp.notch5 {
+            right: 0;
+        }
+        
+        .timestamp.notch2,
+        .timestamp.notch3,
+        .timestamp.notch4 {
+            transform: translateX(-50%);
+        }
+        
+        .canwasWrapper {
+            position: relative;
+            display: flex;
+            padding: 1rem 0 2rem 0;
+        }
+
+        .operationWrapperDiv .operationDiv {
+            padding: 0.5rem;
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 0.5rem;    
+        }
+        
+        input[type=text] {
+            background-color: #aaa;
+            height: 1.5em;
+            width: 100%;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        
+        button {
+            cursor: pointer;
+        }
+        
+        #uploadWrapperDiv {
+            padding: 0;
+        }
+        
+        #uploadWrapperDiv label {
+            width: 100%;
+            height: 100%;
+            display: block;
+            padding-top: 2px;
+        }
+
+        .operationWrapperDiv .operationDiv .operationLineDiv {
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 0.5rem;
+        }
+
+
+
+
+/* POP UP WINDOW */
+html.modalOpen,
+body.modalOpen {
+	position: relative;
+	overflow: hidden;
+}
+
+#popupButton {
+    font-size: 1.2rem;
+    padding: 0 1rem;
+}
+
+.popUp-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.popUp-overlay.invisible {
+  display: none;
+}
+
+.actual-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  max-height: 100vh;
+  max-width: 750px;
+  overflow: auto;
+  width: 100%;
+  min-height: 250px;
+  padding: calc(3rem + 7px) 1rem 1rem 1rem;
+  background: #f2f2f2;
+  border: 2px solid black;
+
+
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.close-button {
+  cursor: pointer;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+}
+
+.cross {
+  position: relative;
+  transform: translateY(-10px);
+}
+
+.cross .cross-part {
+  position: absolute;
+  left: 1px;
+  width: 2px;
+  height: 20px;
+  background: #000000;
+}
+
+.popUp-content {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+        
+#popupHeader {
+    font-weight: bold;
+    font-size: 2rem;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom: 2px solid black;
+    width: 100%;
+    text-align: center;
+	
+}#popupContent {
+    margin-bottom: 1rem;
+}
+        
 

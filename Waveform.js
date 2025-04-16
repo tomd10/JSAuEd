@@ -69,22 +69,27 @@ class Waveform
         this.#samplerate = samplerate;
     }
 
-    setWaveform(frequency, duration, samplerate, shape, amplitude = 1)
+    setWaveform(frequency, duration, samplerate, shape, ampl = 1, phase = 0)
     {
         if (duration < 1/samplerate) return;
+
+        let amplitude = 0.9999*ampl;
+
         const length = samplerate*duration;
         const pcmArray = new Int16Array(length);
         const samplesPerPeriod = samplerate / frequency;
+        const initialSample = Math.floor((phase/360)*samplesPerPeriod);
+
         if (shape == "sine")
         {
-            for (let i = 0; i < length; i++) {
+            for (let i = initialSample; i < length + initialSample; i++) {
                 const sample = Math.sin((2 * Math.PI * frequency * i) / samplerate);
-                pcmArray[i] = Math.floor(sample * 32768 * amplitude); 
+                pcmArray[i - initialSample] = Math.floor(sample * 32768 * amplitude); 
             }
         }
         if (shape == "square")
         {
-            for (let i = 0; i < length; i++) {
+            for (let i = initialSample; i < length + initialSample; i++) {
                 let sample;
                 if (i % samplesPerPeriod < samplesPerPeriod / 2)
                 {
@@ -94,14 +99,14 @@ class Waveform
                 {
                     sample = 32767 * amplitude;
                 }
-                pcmArray[i] = sample;
+                pcmArray[i - initialSample] = sample;
             }
         }
         if (shape == "sawtooth")
         {
-            for (let i = 0; i < length; i++) {
+            for (let i = initialSample; i < length + initialSample; i++) {
                 let sample =Math.floor((amplitude * -32768) + (i % samplesPerPeriod) *((amplitude * 65535) / (samplesPerPeriod)));
-                pcmArray[i] = sample;
+                pcmArray[i - initialSample] = sample;
             }
         }
         if (shape == "noise")
@@ -113,7 +118,7 @@ class Waveform
         }
         if (shape == "triangle")
         {
-            for (let i = 0; i < length; i++) {
+            for (let i = initialSample; i < length + initialSample; i++) {
 
                 let sample;
                 if (i % samplesPerPeriod < samplesPerPeriod / 2)
@@ -129,7 +134,7 @@ class Waveform
                 if (sample > 32767) sample = 32767;
                 if (sample < -32768) sample = - 32768;
 
-                pcmArray[i] = sample;
+                pcmArray[i - initialSample] = sample;
             }
         }
         if (shape == "silence")
@@ -326,33 +331,6 @@ class Waveform
             }
 
         return;
-        if (waveform.length > this.#waveform.length) end = this.#waveform.length;
-        else if (!wrap) end = waveform.length
-        if (!wrap)
-        {
-            if (this.#waveform.length >= waveform.length)
-            {
-                for (let i = 0; i < waveform.length; i++)
-                {
-                    this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i)/32767)*depth + 1 - depth));
-                }
-            }
-            else
-            {
-                for (let i = 0; i < this.#waveform.length; i++)
-                {
-                    this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i)/32767)*depth + 1 - depth));
-                }
-            }
-        }
-        else
-        {
-            for (let i = 0; i < this.#waveform.length; i++)
-            {
-                this.#waveform[i] = Math.floor(this.#waveform[i] * ((waveform.getRectifiedSample(i % waveform.length)/32767)*depth + 1 - depth));
-                //console.log(this.#waveform[i]);
-            }
-        }
     }
 
     rectify(trim)
@@ -372,6 +350,53 @@ class Waveform
             if (sample < -32768) sample = -32768;
             this.#waveform[i] = sample;
         }
+    }
+
+    freqModulate(freq, depth, waveform)
+    {
+        const length = waveform.length;
+        const pcmArray = new Int16Array(length);
+        const samplerate = waveform.samplerate;
+
+        let currentPhase = 0;
+        for (let i = 0; i < length; i++)
+        {
+            let currentFrequency = freq + ((32768+waveform.getSample(i))/65536) * depth;
+
+            let currentSPP = samplerate / currentFrequency;
+            let currentPhaseIncrement = 360 / currentSPP;
+
+            let currentSample = Math.floor(
+                Math.sin((currentPhase*Math.PI)/(180)) * 32768
+            );
+
+            pcmArray[i] = currentSample;
+            currentPhase = currentPhase + currentPhaseIncrement;
+        }
+        this.setSamples(pcmArray, waveform.samplerate);
+    }
+
+    phaseModulate(freq, depth, waveform)
+    {
+        const length = waveform.length;
+        const pcmArray = new Int16Array(length);
+        const samplerate = waveform.samplerate;
+        const SPP = samplerate / freq;
+        const phaseIncrement = 360 / SPP;
+
+        let currentPhase = 0;
+        for (let i = 0; i < length; i++)
+        {
+            let phaseDiff = ((32768+waveform.getSample(i))/65536) * depth;
+
+            let currentSample = Math.floor(
+                Math.sin(((currentPhase+phaseDiff)*Math.PI)/(180)) * 32768
+            );
+
+            pcmArray[i] = currentSample;
+            currentPhase = currentPhase + phaseIncrement;
+        }
+        this.setSamples(pcmArray, waveform.samplerate);
     }
 }
 

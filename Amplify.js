@@ -45,11 +45,11 @@ class Amplify
         if (amplify == "" || amplify == null) return;
 
         const factor = parseFloat(this.#valueInput.value);
-        if (isNaN(factor)) return;
+        if (isNaN(factor)) {HTMLDrawer.showPopup("ERROR", "Amplification factor input format error!", "error"); return;}
         
         const isRelative = amplify == "relative";
 
-        if (isRelative && factor < 0) return; 
+        if (isRelative && factor < 0) {HTMLDrawer.showPopup("ERROR", "Relative amplification factor input format error!", "error"); return;}
 
         waveform.amplify(factor, isRelative);
         WaveformCollection.redraw();

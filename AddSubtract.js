@@ -58,7 +58,7 @@ class AddSubtract
         const waveform1 = WaveformCollection.getWaveform(this.#wfs1.value);
         const waveform2 = WaveformCollection.getWaveform(this.#wfs2.value);
         const waveform3 = WaveformCollection.getWaveform(this.#wfs3.value);
-        if (waveform1 == null || waveform2 == null || waveform3 == null) return;
+        if (waveform1 == null || waveform2 == null || waveform3 == null) {HTMLDrawer.showPopup("ERROR", "Waveform loading error!", "error"); return;}
 
         if (this.#opSelect.value == "+")
         {

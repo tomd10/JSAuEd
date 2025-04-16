@@ -27,8 +27,8 @@ class ImportExport
         //Line 2
         const lineDiv2 = HTMLDrawer.getLineDiv();
 
-        const uploadDiv = document.createElement("div");
-        uploadDiv.id = "uploadWrapperDiv";
+        const upload = HTMLDrawer.getCommandButton("", ()=>{});
+        upload.id = "uploadWrapperDiv";
 
         const label = document.createElement("label");
         label.setAttribute("for", "fileUploadInput");
@@ -43,8 +43,8 @@ class ImportExport
         input.style.display = "none";
 
 
-        uploadDiv.appendChild(label);
-        uploadDiv.appendChild(input);
+        upload.appendChild(label);
+        upload.appendChild(input);
 
         //Line 3
         const lineDiv3 = HTMLDrawer.getLineDiv();
@@ -61,7 +61,7 @@ class ImportExport
         lineDiv1.appendChild(this.#inputFilename);
         lineDiv1.appendChild(exportButton);
 
-        lineDiv2.appendChild(uploadDiv);
+        lineDiv2.appendChild(upload);
 
         lineDiv3.appendChild(storeDiv);
         lineDiv3.appendChild(this.#wfs2);
@@ -103,11 +103,20 @@ class ImportExport
         ImportExport.samplerate = dataView.getUint16(24, true);
         ImportExport.waveform = new Int16Array(arrayBuffer, 44, (file.size - 44)/2);
         
-        console.log(ImportExport.samplerate);
+        
+        let str = "const sampleData2 = new Int16Array([" + ImportExport.waveform[0];
+        for (let i = 1; i < ImportExport.waveform.length; i++)
+        {
+            str = str + "," + ImportExport.waveform[i];
+        }
+
+        str = str + "]);";
+        console.log(str);
         console.log(ImportExport.waveform);
 
         console.log("SAVED WAVEFORMS!!!");
-        //console.log(this);
+        console.log(this);
+        
     }
 
     exportFile()

@@ -18,13 +18,16 @@ class WaveformViewer {
     constructor(_waveform) {
         this.#waveform = _waveform;
         
-        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id, false);
+        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id, true);
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
 
+        const canvasWrapper = document.createElement("div");
+        canvasWrapper.classList.add("canwasWrapper");
+
         this.#canvas = HTMLDrawer.getCanvas();
-        wrapper.appendChild(this.#canvas);
+        canvasWrapper.appendChild(this.#canvas);
 
         
 
@@ -36,51 +39,66 @@ class WaveformViewer {
         const btnShiftLeft = HTMLDrawer.getAuxButton("Shift Left",() => {this.shiftLeft();});
         const btnShiftRight = HTMLDrawer.getAuxButton("Shift Right", () => {this.shiftRight();});
 
+        const btnPlay = HTMLDrawer.getAuxButton("Play audio", () => {this.play();});
+        const btnStop = HTMLDrawer.getAuxButton("Stop audio", () => {this.stop();});
+
         dashboard.appendChild(btnZoomIn);
         dashboard.appendChild(btnZoomOut);
         dashboard.appendChild(btnShiftLeft);
         dashboard.appendChild(btnShiftRight);
+        dashboard.appendChild(btnPlay);
+        dashboard.appendChild(btnStop);
 
         const data = document.createElement("div");
         data.classList.add("waveform-data");
 
         this.#divScale = document.createElement("div");
-        this.#divScale.classList.add("scaleDiv");
-        this.#divScale.id = this.#waveform.id + "scale";
+        this.#divScale.classList.add("miscChar");
+        this.#divScale.classList.add("scale");
+        this.#divScale.id = "wf"+this.#waveform.id + "scale";
         data.appendChild(this.#divScale);
 
         this.#divTimestamp0 = document.createElement("div");
-        this.#divTimestamp0.classList.add("timestamp0Div");
-        this.#divTimestamp0.id = this.#waveform.id + "timestamp0";
+        this.#divTimestamp0.classList.add("timestamp");
+        this.#divTimestamp0.classList.add("notch1");
+        this.#divTimestamp0.id = "wf"+this.#waveform.id + "timestamp0";
         data.appendChild(this.#divTimestamp0);
 
         this.#divTimestamp1 = document.createElement("div");
-        this.#divTimestamp1.classList.add("timestamp1Div");
-        this.#divTimestamp1.id = this.#waveform.id + "timestamp1";
+        this.#divTimestamp1.classList.add("timestamp");
+        this.#divTimestamp1.classList.add("notch2");
+        this.#divTimestamp1.id = "wf"+this.#waveform.id + "timestamp1";
         data.appendChild(this.#divTimestamp1);
 
         this.#divTimestamp2 = document.createElement("div");
-        this.#divTimestamp2.classList.add("timestamp2Div");
-        this.#divTimestamp2.id = this.#waveform.id + "timestamp2";
+        this.#divTimestamp2.classList.add("timestamp");
+        this.#divTimestamp2.classList.add("notch3");
+        this.#divTimestamp2.id = "wf"+this.#waveform.id + "timestamp2";
         data.appendChild(this.#divTimestamp2);
 
         this.#divTimestamp3 = document.createElement("div");
-        this.#divTimestamp3.classList.add("timestamp3Div");
-        this.#divTimestamp3.id = this.#waveform.id + "timestamp3";
+        this.#divTimestamp3.classList.add("timestamp");
+        this.#divTimestamp3.classList.add("notch4");
+        this.#divTimestamp3.id = "wf"+this.#waveform.id + "timestamp3";
         data.appendChild(this.#divTimestamp3);
 
         this.#divTimestamp4 = document.createElement("div");
-        this.#divTimestamp4.classList.add("timestamp4Div");
-        this.#divTimestamp4.id = this.#waveform.id + "timestamp4";
+        this.#divTimestamp4.classList.add("timestamp");
+        this.#divTimestamp4.classList.add("notch5");
+        this.#divTimestamp4.id = "wf"+this.#waveform.id + "timestamp4";
         data.appendChild(this.#divTimestamp4);
 
         this.#divSamplerate = document.createElement("div");
-        this.#divSamplerate.classList.add("samplerateDiv");
-        this.#divSamplerate.id = this.#waveform.id + "samplerate";
+        this.#divSamplerate.classList.add("miscChar");
+        this.#divSamplerate.classList.add("samplerate");
+        this.#divSamplerate.id = "wf"+this.#waveform.id + "samplerate";
         data.appendChild(this.#divSamplerate);
 
+        canvasWrapper.appendChild(data);
+
+        wrapper.appendChild(canvasWrapper);
         wrapper.appendChild(dashboard);
-        wrapper.appendChild(data);
+        
 
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
@@ -94,10 +112,12 @@ class WaveformViewer {
         AudioWrapper.PlayAudio(this.#waveform.waveform, this.#waveform.samplerate);
     }
 
+    /*
     pause()
     {
         AudioWrapper.PausePlay();
     }
+    */
 
     stop()
     {
@@ -237,6 +257,11 @@ class WaveformViewer {
         this.#divTimestamp3.innerHTML = this.getTimestamps()[3];
         this.#divTimestamp4.innerHTML = this.getTimestamps()[4];
         this.#divSamplerate.innerHTML = this.#waveform.samplerate + " Hz";
+    }
+
+    setScale(scale)
+    {
+        this.#scale = scale;
     }
 
     getScale() {

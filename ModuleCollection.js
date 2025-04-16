@@ -9,8 +9,8 @@ class ModuleCollection
 
     static init()
     {
-        let mod0 = new Play();
-        this.#modules.push(mod0);
+        //let mod0 = new Play();
+        //this.#modules.push(mod0);
         let mod1 = new ImportExport();
         this.#modules.push(mod1);
         let mod2 = new Record();
@@ -33,6 +33,22 @@ class ModuleCollection
         this.#modules.push(mod10);
         let mod11 = new DCOffset();
         this.#modules.push(mod11);
+        let mod11_1 = new FM();
+        this.#modules.push(mod11_1);
+        let mod11_2 = new PM();
+        this.#modules.push(mod11_2);
+        let mod11_3 = new XYPlotter();
+        this.#modules.push(mod11_3);
+        let mod12 = new ScriptRectifier();
+        this.#modules.push(mod12);
+        let mod13 = new ScriptSquare();
+        this.#modules.push(mod13);
+        let mod14 = new ScriptTremolo();
+        this.#modules.push(mod14);
+        let mod15 = new ScriptThreePhase();
+        this.#modules.push(mod15);
+        let mod16 = new ScriptModulations();
+        this.#modules.push(mod16);
         //let mod12 = new AM();
         //this.#modules.push(mod12);
     }

@@ -7,24 +7,34 @@ class Init
     }
 }
 
-const sample = new Array();
-for (let j = 0; j < 2; j++) {
-    for (let i = 0; i < 50000; i++) {
-        sample.push(Math.floor(32767 * Math.sin(i * 0.1)));
-    }
-    for (let i = 0; i < 50000; i++) {
-        sample.push(Math.floor(10000 * Math.sin(i * 0.1)));
-    }
-}
 
-const sample2 = new Array()
-{
-    for (let i = 0; i < 2000000; i++)
-    {
-        if (i % 100 > 50) sample2.push(i % 30000);
-        else sample2.push(-1*(i %30000));
-    }
+
+
+function debounce (func, wait, immediate) {
+    var timeout;
+    return function () {
+        var context = this,
+            args = arguments;
+        var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
 }
+    
+
+window.addEventListener("resize", debounce(
+    () => {HTMLDrawer.draw()}, 400
+));
+
+document.getElementById("popupButton").addEventListener("click", ()=>{
+    HTMLDrawer.hidePopup();
+});
+
 
 AudioWrapper.Init();
 WaveformCollection.init();
