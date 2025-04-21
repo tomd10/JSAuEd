@@ -12,7 +12,7 @@ class Generate
     //Module 3
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Generate", "generate");
+        const hdr = HTMLDrawer.getHeader("Generate", "generate", "src");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

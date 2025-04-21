@@ -24,6 +24,7 @@ class HTMLDrawer
     {
         const canvas = document.createElement("canvas");
         canvas.classList.add("waveformCanvas");
+        canvas.style.maxWidth = "100%";
         this.#canvases.push(canvas);
         return canvas
     }
@@ -70,7 +71,7 @@ class HTMLDrawer
         return button;
     }
 
-    static getHeader(txt, id, isWaveform = false)
+    static getHeader(txt, id, type = "op", isWaveform = false)
     {
         const mainWrapper = document.createElement("div");
         mainWrapper.id = id;
@@ -106,6 +107,15 @@ class HTMLDrawer
         const header = document.createElement("div");
         header.id = id + "header";
         header.innerHTML = txt;
+
+        if(type == "script")
+        {
+            header.style.backgroundColor = "#a2ffb7";
+        }
+        else if (type == "src")
+        {
+            header.style.backgroundColor="#98b300";
+        }
 
         if (isWaveform)
         {
@@ -265,14 +275,35 @@ class HTMLDrawer
         document.getElementsByClassName("popUp-overlay")[0].classList.add("invisible");
     }
 
-    static showPopup(header, text, type)
+    static showPopup(header, content, type)
     {
         document.getElementsByTagName('body')[0].classList.add('modalOpen');
         document.getElementsByTagName('html')[0].classList.add('modalOpen');
         document.getElementsByClassName("popUp-overlay")[0].classList.remove("invisible");
 
         document.getElementById("popupHeader").innerHTML = header;
-        document.getElementById("popupContent").innerHTML = text;
+
+        document.getElementById("popupContent").innerHTML = "";
+
+        const des = document.createElement("div");
+        des.innerHTML = content[0];
+        document.getElementById("popupContent").appendChild(des);
+
+
+        if (content.length > 1)
+        {
+            const list = document.createElement("ol");
+            list.setAttribute("start", 0);
+            for (let i = 1; i < content.length; i++)
+            {
+                const li = document.createElement("li");
+                li.innerHTML = content[i];
+                list.appendChild(li);
+            }
+
+            document.getElementById("popupContent").appendChild(list);
+        }
+        
 
         if (type == "info") document.getElementById("popupWrapper").style.backgroundColor = "#cfffdb";
         else if (type == "error") document.getElementById("popupWrapper").style.backgroundColor = "#ffd4cc";

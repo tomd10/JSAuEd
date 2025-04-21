@@ -1,9 +1,10 @@
 class ScriptModulations
 {
     #state = -1;
+    #stateDiv;
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Script 5: Modulations", "scriptTremolo");
+        const hdr = HTMLDrawer.getHeader("Script 5: Modulations", "scriptTremolo", "script");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -16,6 +17,7 @@ class ScriptModulations
         const buttonBackward = HTMLDrawer.getCommandButton("Backward", () => {this.backward();});
         const buttonHelp = HTMLDrawer.getAuxButton("Help", () => {this.help();});
 
+        this.#stateDiv = HTMLDrawer.getHelpText("Current state: Not initialized");
 
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
@@ -24,6 +26,7 @@ class ScriptModulations
         lineDiv1.appendChild(buttonHelp);
         lineDiv1.appendChild(buttonForward);
         lineDiv1.appendChild(buttonBackward);
+        lineDiv1.appendChild(this.#stateDiv);
 
         wrapper.appendChild(lineDiv1);
     }
@@ -36,12 +39,13 @@ class ScriptModulations
 
     help()
     {
+        HTMLDrawer.showPopup("Modulations script description", ["The Modulations script allows you to hear how sinewaves sound when modulated by Taylor Dayne's Tell it to my heart. Waveform A contains the song, waveform B contains the modulation output. The steps are:", "1 kHz sinewaves modulated by AM", "600 Hz sinewave modulated by FM (depth 1200 Hz)", "440 Hz sinewave modulated by PM (depth 180 degrees)"], "info");
 
     }
 
     forward()
     {
-        if (this.#state >= 0 && this.#state < 3)
+        if (this.#state >= 0 && this.#state < 2)
         {
             this.#state = this.#state + 1;
             this.applyScenery(this.#state);
@@ -63,6 +67,7 @@ class ScriptModulations
         {
             this.scenery[i]();
         }
+        this.#stateDiv.innerHTML = "Current state: " + step;
         WaveformCollection.redraw();
     }
 
@@ -73,12 +78,10 @@ class ScriptModulations
 
             WaveformCollection.waveforms[0].setSamples(sampleData2, 44100);
             WaveformCollection.waveforms[1].setWaveform(1000, 15, 44100, "sine", 0.9);
-        },
-        function () {
             WaveformCollection.waveforms[1].modulate(WaveformCollection.waveforms[0], 0.9, true);
         },
         function () {
-            WaveformCollection.waveforms[1].freqModulate(440, 440, WaveformCollection.waveforms[0]);
+            WaveformCollection.waveforms[1].freqModulate(600, 1200, WaveformCollection.waveforms[0]);
         },
         function () {
             WaveformCollection.waveforms[1].phaseModulate(440, 180, WaveformCollection.waveforms[0]);

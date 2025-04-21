@@ -56,7 +56,7 @@ class WaveformCollection
         select.innerHTML = "";
         this.waveforms.forEach((wfv) => {
             let opt = document.createElement("option");
-            opt.innerHTML = wfv.id;
+            opt.innerHTML =  String.fromCharCode(parseInt(wfv.id) + 65);
             opt.value = wfv.id;
             select.appendChild(opt);
         });

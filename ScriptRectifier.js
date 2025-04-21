@@ -1,9 +1,10 @@
 class ScriptRectifier
 {
     #state = -1;
+    #stateDiv;
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Script 1: Rectifier", "scriptRectifier");
+        const hdr = HTMLDrawer.getHeader("Script 1: Rectifier", "scriptRectifier", "script");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -16,7 +17,7 @@ class ScriptRectifier
         const buttonBackward = HTMLDrawer.getCommandButton("Backward", () => {this.backward();});
         const buttonHelp = HTMLDrawer.getAuxButton("Help", () => {this.help();});
 
-
+        this.#stateDiv = HTMLDrawer.getHelpText("Current state: Not initialized");
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
         
@@ -24,6 +25,7 @@ class ScriptRectifier
         lineDiv1.appendChild(buttonHelp);
         lineDiv1.appendChild(buttonForward);
         lineDiv1.appendChild(buttonBackward);
+        lineDiv1.appendChild(this.#stateDiv);
 
         wrapper.appendChild(lineDiv1);
     }
@@ -36,7 +38,7 @@ class ScriptRectifier
 
     help()
     {
-        HTMLDrawer.showPopup("Rectifier script description", "Description", "info");
+        HTMLDrawer.showPopup("Rectifier script description", ["The Rectifier script shows you waveform of rectified AC currents. The steps are:", "None", "Half bridge rectifier", "Full bridge rectifier", "Full bridge rectifier with large capacitor in parallel" ], "info");
     }
 
     forward()
@@ -63,6 +65,7 @@ class ScriptRectifier
         {
             this.scenery[i]();
         }
+        this.#stateDiv.innerHTML = "Current state: " + step;
         WaveformCollection.redraw();
     }
 

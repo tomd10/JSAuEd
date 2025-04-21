@@ -1,9 +1,10 @@
 class ScriptTremolo
 {
     #state = -1;
+    #stateDiv;
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Script 3: Tremolo", "scriptTremolo");
+        const hdr = HTMLDrawer.getHeader("Script 3: Tremolo", "scriptTremolo", "script");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -16,7 +17,7 @@ class ScriptTremolo
         const buttonBackward = HTMLDrawer.getCommandButton("Backward", () => {this.backward();});
         const buttonHelp = HTMLDrawer.getAuxButton("Help", () => {this.help();});
 
-
+        this.#stateDiv = HTMLDrawer.getHelpText("Current state: Not initialized");
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
         
@@ -24,6 +25,7 @@ class ScriptTremolo
         lineDiv1.appendChild(buttonHelp);
         lineDiv1.appendChild(buttonForward);
         lineDiv1.appendChild(buttonBackward);
+        lineDiv1.appendChild(this.#stateDiv);
 
         wrapper.appendChild(lineDiv1);
     }
@@ -36,7 +38,7 @@ class ScriptTremolo
 
     help()
     {
-
+        HTMLDrawer.showPopup("Tremolo script description", ["The Tremolo script shows you that tremolo (periodic change of volume) is just amplitude modulation. Waveform A contains synthetizer tone, waveform B contains modulation waveform. The steps are:", "No modulation", "Waveform A amplitude modulated by waveform B"], "info");
     }
 
     forward()
@@ -63,6 +65,7 @@ class ScriptTremolo
         {
             this.scenery[i]();
         }
+        this.#stateDiv.innerHTML = "Current state: " + step;
         WaveformCollection.redraw();
     }
 

@@ -17,8 +17,7 @@ class WaveformViewer {
     #audio;
     constructor(_waveform) {
         this.#waveform = _waveform;
-        
-        const hdr = HTMLDrawer.getHeader("Waveform " + this.#waveform.id, "wf" + this.#waveform.id, true);
+        const hdr = HTMLDrawer.getHeader("Waveform " + String.fromCharCode(parseInt(this.#waveform.id) + 65), "wf" + this.#waveform.id, "wf",true);
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];

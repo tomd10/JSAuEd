@@ -1,9 +1,10 @@
 class ScriptThreePhase
 {
     #state = -1;
+    #stateDiv;
     constructor()
     {
-        const hdr = HTMLDrawer.getHeader("Script 4: Three phase AC", "scriptThreePhase");
+        const hdr = HTMLDrawer.getHeader("Script 4: Three phase AC", "scriptThreePhase", "script");
         const mainWrapper = hdr[0];
         const wrapper = hdr[1];    
         const header = hdr[2];
@@ -16,7 +17,7 @@ class ScriptThreePhase
         const buttonBackward = HTMLDrawer.getCommandButton("Backward", () => {this.backward();});
         const buttonHelp = HTMLDrawer.getAuxButton("Help", () => {this.help();});
 
-
+        this.#stateDiv = HTMLDrawer.getHelpText("Current state: Not initialized");
         mainWrapper.appendChild(header);
         mainWrapper.appendChild(wrapper);
         
@@ -24,7 +25,8 @@ class ScriptThreePhase
         lineDiv1.appendChild(buttonHelp);
         lineDiv1.appendChild(buttonForward);
         lineDiv1.appendChild(buttonBackward);
-
+        lineDiv1.appendChild(this.#stateDiv);
+        
         wrapper.appendChild(lineDiv1);
     }
 
@@ -36,6 +38,7 @@ class ScriptThreePhase
 
     help()
     {
+        HTMLDrawer.showPopup("Three phase AC script description", ["The Three phase AC script shows you that difference of two sinewaves with phase difference of 120 degrees gives greater amplitude (by factor of sqrt(3)). The steps are:", "0 and 120 degrees phase", "Difference of waveforms from previous step", "120 and 240 degrees", "Difference of waveforms from previous step", "240 and 0 degrees", "Difference of waveforms from previous step"], "info");
 
     }
 
@@ -63,6 +66,7 @@ class ScriptThreePhase
         {
             this.scenery[i]();
         }
+        this.#stateDiv.innerHTML = "Current state: " + step;
         WaveformCollection.redraw();
     }
 
