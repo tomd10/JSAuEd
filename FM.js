@@ -53,12 +53,12 @@ class FM
 
 
         let freq = parseFloat(this.#freqInput.value);
-        if (freq < 0 || freq > 20000 || isNaN(freq)) return;
+        if (freq < 0 || freq > 20000 || isNaN(freq)) {HTMLDrawer.showPopup("ERROR", ["Frequency input format error!"], "error"); return;}
 
         let depth = parseFloat(this.#depthInput.value);
-        if (depth < 0 || depth > 20000 || isNaN(depth)) return;
+        if (depth < 0 || depth > 20000 || isNaN(depth)) {HTMLDrawer.showPopup("ERROR", ["Modulation depth input format error!"], "error"); return;}
 
-        if (freq + depth > 20000) return;
+        if (freq + depth > 20000) {HTMLDrawer.showPopup("ERROR", ["Frequency plus depth cannot exceed 20 kHz!"], "error"); return;}
 
         waveform2.freqModulate(freq, depth, waveform1);
         WaveformCollection.redraw();

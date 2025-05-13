@@ -51,12 +51,12 @@ class AM
     {
         const waveform1 = WaveformCollection.getWaveform(this.#wfs1.value);
         const waveform2 = WaveformCollection.getWaveform(this.#wfs2.value);
-        if (waveform1 == null || waveform2 == null) {HTMLDrawer.showPopup("ERROR", "Waveform loading error!", "error"); return;}
+        if (waveform1 == null || waveform2 == null) {HTMLDrawer.showPopup("ERROR", ["Waveform loading error!"], "error"); return;}
 
-        if (waveform1.samplerate != waveform2.samplerate) {HTMLDrawer.showPopup("ERROR", "Waveform samplerate mismatch!", "error"); return;}
+        if (waveform1.samplerate != waveform2.samplerate) {HTMLDrawer.showPopup("ERROR", ["Waveform samplerate mismatch!"], "error"); return;}
 
         let depth = parseFloat(this.#depthInput.value);
-        if (depth > 1 || depth < 0 || isNaN(depth)) {HTMLDrawer.showPopup("ERROR", "Modulation depth input format error!", "error"); return;}
+        if (depth > 1 || depth < 0 || isNaN(depth)) {HTMLDrawer.showPopup("ERROR", ["Modulation depth input format error!"], "error"); return;}
 
         let wrap = this.#wrapChk.checked;
 

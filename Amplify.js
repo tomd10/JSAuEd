@@ -39,17 +39,17 @@ class Amplify
     amplify()
     {
         const waveform = WaveformCollection.getWaveform(this.#wfs1.value);
-        if (waveform == null) return;
+        if (waveform == null) {HTMLDrawer.showPopup("ERROR", ["Waveform error!"], "error"); return;}
 
         const amplify = this.#amplifySelect.value;
-        if (amplify == "" || amplify == null) return;
+        if (amplify == "" || amplify == null) {HTMLDrawer.showPopup("ERROR", ["Amplification factor input format error!"], "error"); return;}
 
         const factor = parseFloat(this.#valueInput.value);
-        if (isNaN(factor)) {HTMLDrawer.showPopup("ERROR", "Amplification factor input format error!", "error"); return;}
+        console.log(factor);
+        if (isNaN(factor)) {HTMLDrawer.showPopup("ERROR", ["Amplification factor input format error!"], "error"); return;}
         
         const isRelative = amplify == "relative";
-
-        if (isRelative && factor < 0) {HTMLDrawer.showPopup("ERROR", "Relative amplification factor input format error!", "error"); return;}
+        if (isRelative && factor < 0) {HTMLDrawer.showPopup("ERROR", ["Relative amplification factor input format error!"], "error"); return;}
 
         waveform.amplify(factor, isRelative);
         WaveformCollection.redraw();

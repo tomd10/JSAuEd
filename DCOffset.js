@@ -41,7 +41,7 @@ class DCOffset
         if (waveform == null) return;
 
         const offset = parseFloat(this.#valueInput.value);
-        if (isNaN(offset) || offset > 2.0 || offset < -2.0) return;
+        if (isNaN(offset) || offset > 2.0 || offset < -2.0) {HTMLDrawer.showPopup("ERROR", ["Incorrect offset value"], "error"); return;}
         
 
         waveform.offset(offset);

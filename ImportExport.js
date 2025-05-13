@@ -88,13 +88,13 @@ class ImportExport
         const dataView = new DataView(arrayBuffer);
 
         //Header RIFF?
-        if (dataView.getUint32(0, false) !== 1380533830) return;
+        if (dataView.getUint32(0, false) !== 1380533830) {HTMLDrawer.showPopup("ERROR", "Only WAV files are supported!", "error"); return;}
 
         //File size OK?
         if (file.size - 8 != dataView.getUint32(4, true)) return;
 
         //Channel count 
-        if (dataView.getUint16(22, true) != 1) return;
+        if (dataView.getUint16(22, true) != 1) {HTMLDrawer.showPopup("ERROR", "Multi-channel WAV files are not supported!", "error"); return;}
 
         //16 bit signed?
         if (dataView.getUint16(34, true) != 16) return;
@@ -150,7 +150,7 @@ class ImportExport
         const wf = WaveformCollection.getWaveform(this.#wfs2.value);
         if (wf == null) return;
 
-        if (ImportExport.samplerate == null || ImportExport.waveform == null) return;
+        if (ImportExport.samplerate == null || ImportExport.waveform == null) {HTMLDrawer.showPopup("ERROR", ["Uploaded file is empty!"], "error"); return;}
         wf.setSamples(ImportExport.waveform, ImportExport.samplerate);
 
         WaveformCollection.redraw();

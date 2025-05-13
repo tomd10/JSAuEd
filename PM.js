@@ -53,12 +53,10 @@ class PM
 
 
         let freq = parseFloat(this.#freqInput.value);
-        if (freq < 0 || freq > 20000 || isNaN(freq)) return;
+        if (freq < 0 || freq > 20000 || isNaN(freq)) {HTMLDrawer.showPopup("ERROR", ["Frequency input format error!"], "error"); return;}
 
         let depth = parseFloat(this.#depthInput.value);
-        if (depth < 0 || depth >= 360 || isNaN(depth)) return;
-
-        if (freq + depth > 20000) return;
+        if (depth < 0 || depth >= 360 || isNaN(depth)) {HTMLDrawer.showPopup("ERROR", ["Depth input format error!"], "error"); return;}
 
         waveform2.phaseModulate(freq, depth, waveform1);
         WaveformCollection.redraw();

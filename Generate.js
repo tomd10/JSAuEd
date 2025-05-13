@@ -78,19 +78,19 @@ class Generate
         if (shape == "" || shape == null) return;
 
         let freq = parseFloat(this.#freqInput.value);
-        if (freq > 20000 || freq < 1 || isNaN(freq)) return;
+        if (freq > 20000 || freq < 1 || isNaN(freq)) {HTMLDrawer.showPopup("ERROR", ["Frequency input format error!"], "error"); return;}
 
         let amplitude = parseFloat(this.#amplInput.value);
-        if (amplitude > 1.0 || amplitude < 0 || isNaN(amplitude)) return;
+        if (amplitude > 1.0 || amplitude < 0 || isNaN(amplitude)) {HTMLDrawer.showPopup("ERROR", ["Amplitude input format error!"], "error"); return;}
 
         let phase = parseFloat(this.#phaseInput.value);
-        if (phase < 0.0 || phase > 360.0 || isNaN(phase)) return;
+        if (phase < 0.0 || phase > 360.0 || isNaN(phase)) {HTMLDrawer.showPopup("ERROR", ["Phase input format error!"], "error"); return;}
 
         let duration = parseFloat(this.#durInput.value);
-        if (duration < 0.005 || duration > 3600 || isNaN(duration)) return;
+        if (duration < 0.005 || duration > 3600 || isNaN(duration)) {HTMLDrawer.showPopup("ERROR", ["Duration input format error!"], "error"); return;}
 
         let samplerate = parseInt(this.#srInput.value);
-        if (samplerate < 8000 || samplerate > 96000 || isNaN(samplerate)) return;
+        if (samplerate < 8000 || samplerate > 96000 || isNaN(samplerate)) {HTMLDrawer.showPopup("ERROR", ["Samplerate input format error (8 to 96 kHz)!"], "error"); return;}
 
         waveform.setWaveform(freq, duration, samplerate, shape, amplitude, phase);
         WaveformCollection.redraw();
